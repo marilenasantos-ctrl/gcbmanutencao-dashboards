@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard de Veículos - GCB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Estilos CSS adaptados do 'dashboard_abastecimento_fixo.html' */
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: #065f46;
+    }
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .upload-area {
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      border: 1px solid #a7f3d0;
+      max-width: 100%;
+      white-space: nowrap;
+    }
+    .file-fixed-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #065f46;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    main {
+      padding: 20px 24px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0 8px;
+      color: #111827;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #6b7280;
+      letter-spacing: 0.06em;
+    }
+    .card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #065f46;
+    }
+    .card-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .filters-panel {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px 16px 18px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+      margin-top: 18px;
+    }
+    .filters-panel > strong {
+      font-size: 13px;
+      color: #111827;
+    }
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 16px;
+      margin-top: 10px;
+      align-items: end;
+    }
+    .filter-group label {
+      font-size: 11px;
+      color: #4b5563;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      background: #f9fafb;
+      outline: none;
+    }
+    .filter-group select:focus,
+    .filter-group input:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px #bbf7d0;
+    }
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #22c55e;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(22,163,74,0.4);
+    }
+    .btn-primary:hover {
+      background: #16a34a;
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+    .filter-badge {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .filter-badge span {
+      font-weight: 600;
+      color: #065f46;
+    }
+    
+    .table-container {
+      margin-top: 10px;
+      max-height: 500px; 
+      overflow: auto;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 900px;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      background: #f9fafb;
+      z-index: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #f3f4f6;
+      white-space: nowrap;
+    }
+    th {
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 11px;
+    }
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    tbody tr:hover {
+      background: #ecfdf5;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    @media (max-width: 900px) {
+      .filters-panel {
+        padding: 14px 16px 14px;
+      }
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-actions {
+        margin-top: 10px;
+      }
+      .upload-area {
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+      .file-fixed-name {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Dashboard de Veículos</h1>
+      <p>Relatório Geral - Análise da Frota (Próprios e Locados)</p>
+    </div>
+    <div>
+      <div class="upload-area">
+        <span><strong>Dados de origem:</strong></span>
+        <span class="file-fixed-name">Relação Veículos (1).xlsx - Planilha1.csv</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="section-title">Resumo Geral da Frota</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Total de Veículos</div>
+        <div class="card-value" id="totalVeiculos">-</div>
+        <div class="card-sub">Total de registros na base (Próprios + Locados)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Veículos Próprios</div>
+        <div class="card-value" id="veiculosProprios">-</div>
+        <div class="card-sub">Total na seção de Próprios</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Veículos Locados</div>
+        <div class="card-value" id="veiculosLocados">-</div>
+        <div class="card-sub">Total na seção de Locados</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gestores Envolvidos</div>
+        <div class="card-value" id="totalGestores">-</div>
+        <div class="card-sub">Total de nomes de gestores únicos</div>
+      </div>
+    </div>
+
+    <div class="filters-panel">
+      <strong>Filtros</strong>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="filtroTipo">Tipo de Veículo (Próprio/Locado)</label>
+          <select id="filtroTipo">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroCentro">Centro de Custo</label>
+          <select id="filtroCentro">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroPlaca">Placa</label>
+          <select id="filtroPlaca">
+            <option value="">(Todas)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroAno">Ano</label>
+          <select id="filtroAno">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroGestor">Gestor</label>
+          <select id="filtroGestor">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Ações</label>
+          <div class="filter-actions">
+            <button class="btn btn-primary" id="btnAplicar">Aplicar filtros</button>
+            <button class="btn btn-secondary" id="btnLimpar">Limpar</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-badge" id="filtroResumo">
+        Nenhum filtro aplicado.
+      </div>
+    </div>
+    
+    <div class="section-title">Tabela de Dados (Relatório Geral de Veículos)</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Item (Carro/Reboque)</th>
+            <th>Veículo (Modelo)</th>
+            <th>Placa</th>
+            <th>Ano</th>
+            <th>Centro de Custo</th>
+            <th>Gestor</th>
+            <th>Renavam</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      • Este dashboard foi gerado com base no arquivo "Relação Veículos (1).xlsx - Planilha1.csv".
+    </div>
+  </main>
+
+  <script>
+    // Dados extraídos e consolidados do arquivo "Relação Veículos (1).xlsx - Planilha1.csv"
+    const DADOS = [
+        // VEICULOS PROPRIOS
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "RENAULT/OROCH PRO 16", "PLACA": "RRD4F27", "ANO": "2024", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01357813632"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "RENAULT/OROCH PRO 16", "PLACA": "SKO4B46", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01424410859"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "MERCEDES BENZ GLA200 AMG LINE", "PLACA": "SKJ2A12", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01401020167"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RMY5G19", "ANO": "2021", "CENTRO DE CUSTO": "UN-BC", "GESTOR": "JOSE MAURICIO", "RENAVAM": "01262639490"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVA2F74", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01321104143"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVI6H54", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01325642042"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "HILUX SW4 SRX PLAT. 4X4", "PLACA": "SKQ5F52", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "1427317043"},
+        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "VW/VOYAGE 1.6L MB5", "PLACA": "RGA3G60", "ANO": "2021", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "01246094786"},
+        {"TIPO": "Próprio", "ITENS": "Reboque", "VEÍCULOS": "R/RADIAL RCAM 751", "PLACA": "TTI5J74", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01435088937"},
+        {"TIPO": "Próprio", "ITENS": "Reboque", "VEÍCULOS": "R/RONE RCA 1E", "PLACA": "SKF0H54", "ANO": "2024", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01411146368"},
+        
+        // VEICULOS LOCADOS (Ano e Renavam vazios foram marcados como "N/A" para visualização)
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0", "PLACA": "TEI4C84", "ANO": "N/A", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0 FAST", "PLACA": "TEI4C27", "ANO": "N/A", "CENTRO DE CUSTO": "TRES LAGOAS", "GESTOR": "NILTON GARCIA", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TXO8H06", "ANO": "N/A", "CENTRO DE CUSTO": "TANQUES SUAPE", "GESTOR": "IVO", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEH0H96", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20S COMFORT PLUS TGDI FLEX AT 1.0", "PLACA": "TDG5J20", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "TJV9B32", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "SUN2F81", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "TERA HIGH TSI", "PLACA": "TES4I65", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 LIMITED FLEX 1.0", "PLACA": "TEP5A99", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "STRADA ENDURANCE CP FLEX 1.3", "PLACA": "SYS6J23", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "POLO TRACK 1.0", "PLACA": "TEO8I44", "ANO": "N/A", "CENTRO DE CUSTO": "REPLAN-PAULINIA", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEJ1I33", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
+        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0", "PLACA": "TXI4A14", "ANO": "N/A", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "N/A"},
+    ];
+
+    let dadosOriginais = [];
+    let dadosFiltrados = [];
+    const filtroResumo = document.getElementById('filtroResumo');
+    
+    // Mapeamento de IDs de filtro para as chaves de dados
+    const filtroMap = {
+      'filtroTipo': 'TIPO',
+      'filtroCentro': 'CENTRO DE CUSTO',
+      'filtroPlaca': 'PLACA',
+      'filtroAno': 'ANO',
+      'filtroGestor': 'GESTOR'
+    };
+
+    document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
+    document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!Array.isArray(DADOS) || DADOS.length === 0) {
+        filtroResumo.textContent = 'Nenhum dado encontrado.';
+        return;
+      }
+      dadosOriginais = DADOS;
+      dadosFiltrados = [...dadosOriginais];
+      preencherFiltros(dadosOriginais);
+      processarDados(dadosFiltrados);
+      filtroResumo.textContent = 'Nenhum filtro aplicado (mostrando todos os registros).';
+    });
+
+    function preencherFiltros(dados) {
+      const tiposSet = new Set();
+      const centrosSet = new Set();
+      const placasSet = new Set();
+      const anosSet = new Set();
+      const gestoresSet = new Set();
+
+      dados.forEach(l => {
+        if (l.TIPO) tiposSet.add(l.TIPO);
+        if (l['CENTRO DE CUSTO']) centrosSet.add(l['CENTRO DE CUSTO']);
+        if (l.PLACA) placasSet.add(l.PLACA);
+        if (l.ANO) anosSet.add(l.ANO);
+        if (l.GESTOR) gestoresSet.add(l.GESTOR);
+      });
+
+      preencherSelect('filtroTipo', tiposSet);
+      preencherSelect('filtroCentro', centrosSet);
+      preencherSelect('filtroPlaca', placasSet);
+      // Ordena por ano (numérico/alfabético, colocando N/A por último)
+      preencherSelect('filtroAno', Array.from(anosSet).sort((a, b) => {
+          if (a === 'N/A') return 1;
+          if (b === 'N/A') return -1;
+          return a.toString().localeCompare(b.toString());
+      }));
+      preencherSelect('filtroGestor', gestoresSet);
+    }
+
+    function preencherSelect(id, setValores) {
+      const select = document.getElementById(id);
+      const valorAtual = select.value;
+      select.innerHTML = '<option value="">(Todos)</option>';
+      
+      const valores = Array.isArray(setValores) ? setValores : Array.from(setValores);
+
+      valores
+        .sort((a, b) => a.toString().localeCompare(b.toString(), 'pt-BR'))
+        .forEach(valor => {
+          if (valor) { 
+            const option = document.createElement('option');
+            option.value = valor;
+            option.textContent = valor;
+            select.appendChild(option);
+          }
+        });
+
+      if (valorAtual) select.value = valorAtual;
+    }
+
+    function aplicarFiltros() {
+      const tipoSel = document.getElementById('filtroTipo').value;
+      const centroSel = document.getElementById('filtroCentro').value;
+      const placaSel = document.getElementById('filtroPlaca').value;
+      const anoSel = document.getElementById('filtroAno').value;
+      const gestorSel = document.getElementById('filtroGestor').value;
+
+      dadosFiltrados = dadosOriginais.filter(l => {
+        const passaTipo = !tipoSel || l.TIPO === tipoSel;
+        const passaCentro = !centroSel || l['CENTRO DE CUSTO'] === centroSel;
+        const passaPlaca = !placaSel || l.PLACA === placaSel;
+        const passaAno = !anoSel || l.ANO === anoSel;
+        const passaGestor = !gestorSel || l.GESTOR === gestorSel;
+        return passaTipo && passaCentro && passaPlaca && passaAno && passaGestor;
+      });
+
+      processarDados(dadosFiltrados);
+      atualizarResumoFiltros(tipoSel, centroSel, placaSel, anoSel, gestorSel);
+    }
+
+    function limparFiltros() {
+      document.getElementById('filtroTipo').value = '';
+      document.getElementById('filtroCentro').value = '';
+      document.getElementById('filtroPlaca').value = '';
+      document.getElementById('filtroAno').value = '';
+      document.getElementById('filtroGestor').value = '';
+      aplicarFiltros();
+    }
+
+    function atualizarResumoFiltros(tipoSel, centroSel, placaSel, anoSel, gestorSel) {
+      const partes = [];
+      if (tipoSel) partes.push(`Tipo: <span>${tipoSel}</span>`);
+      if (centroSel) partes.push(`Centro de Custo: <span>${centroSel}</span>`);
+      if (placaSel) partes.push(`Placa: <span>${placaSel}</span>`);
+      if (anoSel) partes.push(`Ano: <span>${anoSel}</span>`);
+      if (gestorSel) partes.push(`Gestor: <span>${gestorSel}</span>`);
+
+      if (!partes.length) {
+        filtroResumo.innerHTML = 'Nenhum filtro aplicado (mostrando todos os registros).';
+      } else {
+        filtroResumo.innerHTML = 'Filtros ativos → ' + partes.join(' | ');
+      }
+    }
+
+    function processarDados(dados) {
+      if (!Array.isArray(dados) || dados.length === 0) {
+        atualizarResumo([]);
+        atualizarTabela([]);
+        return;
+      }
+      atualizarResumo(dados);
+      atualizarTabela(dados);
+    }
+
+    function atualizarResumo(dados) {
+      const totalVeiculos = dados.length;
+      const veiculosProprios = dados.filter(d => d.TIPO === 'Próprio').length;
+      const veiculosLocados = dados.filter(d => d.TIPO === 'Locado').length;
+      
+      // Conta gestores únicos, ignorando vazios/N/A
+      const gestoresUnicos = new Set(dados.map(d => d.GESTOR).filter(g => g && g !== 'N/A'));
+      const totalGestores = gestoresUnicos.size;
+
+      document.getElementById('totalVeiculos').textContent = totalVeiculos.toLocaleString('pt-BR');
+      document.getElementById('veiculosProprios').textContent = veiculosProprios.toLocaleString('pt-BR');
+      document.getElementById('veiculosLocados').textContent = veiculosLocados.toLocaleString('pt-BR');
+      document.getElementById('totalGestores').textContent = totalGestores.toLocaleString('pt-BR');
+    }
+
+    function atualizarTabela(dados) {
+      const dataBody = document.getElementById('dataBody');
+      dataBody.innerHTML = ''; 
+
+      if (dados.length === 0) {
+        const row = dataBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 8;
+        cell.textContent = 'Nenhum registro encontrado com os filtros aplicados.';
+        cell.style.textAlign = 'center';
+        cell.style.padding = '20px';
+        return;
+      }
+
+      dados.forEach(l => {
+        const row = dataBody.insertRow();
+        row.insertCell().textContent = l.TIPO || '-';
+        row.insertCell().textContent = l.ITENS || '-';
+        row.insertCell().textContent = l.VEÍCULOS || '-';
+        row.insertCell().textContent = l.PLACA || '-';
+        row.insertCell().textContent = l.ANO || '-';
+        row.insertCell().textContent = l['CENTRO DE CUSTO'] || '-';
+        row.insertCell().textContent = l.GESTOR || '-';
+        row.insertCell().textContent = l.RENAVAM || '-';
+      });
+    }
+
+  </script>
+</body>
+</html>
