@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Dashboards GCB</title>
-
 <style>
     body {
         margin: 0;
         padding: 0;
         background: #ffffff;
 
-        /* Marca d’água suave da logo */
+        /* Marca d’água gigante */
         background-image: url('logo-gcb.png');
         background-repeat: no-repeat;
-        background-position: center 350px;
-        background-size: 300px;
-        opacity: 0.98;
+        background-position: center 200px; /* sobe ou desce a logo */
+        background-size: 900px;  /* TAMANHO GIGANTE */
+        opacity: 1;
     }
 
     /* Faixa superior estilo IBGE */
@@ -30,10 +24,10 @@
     }
 
     .topo img {
-        height: 95px; /* tamanho ideal */
+        height: 95px;
     }
 
-    /* Botões */
+    /* Menu */
     .menu {
         margin-top: 80px;
         display: flex;
@@ -58,21 +52,3 @@
         transform: scale(1.05);
     }
 </style>
-</head>
-
-<body>
-
-    <!-- Faixa superior com logo -->
-    <div class="topo">
-        <img src="logo-gcb.png">
-    </div>
-
-    <!-- Menu dos dashboards -->
-    <div class="menu">
-        <a class="botao" href="combustiveis.html">⛽ Dashboard de Combustíveis</a>
-        <a class="botao" href="veiculos.html">🚛 Dashboard de Veículos</a>
-        <a class="botao" href="equipamentos.html">🛠 Dashboard de Equipamentos</a>
-    </div>
-
-</body>
-</html>
