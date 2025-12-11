@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard de Máquinas e Equipamentos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Estilos CSS adaptados do layout anterior */
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: #065f46;
+    }
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .upload-area {
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      border: 1px solid #a7f3d0;
+      max-width: 100%;
+      white-space: nowrap;
+    }
+    .file-fixed-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #065f46;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    main {
+      padding: 20px 24px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0 8px;
+      color: #111827;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #6b7280;
+      letter-spacing: 0.06em;
+    }
+    .card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #065f46;
+    }
+    .card-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .filters-panel {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px 16px 18px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+      margin-top: 18px;
+    }
+    .filters-panel > strong {
+      font-size: 13px;
+      color: #111827;
+    }
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 16px;
+      margin-top: 10px;
+      align-items: end;
+    }
+    .filter-group label {
+      font-size: 11px;
+      color: #4b5563;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      background: #f9fafb;
+      outline: none;
+    }
+    .filter-group select:focus,
+    .filter-group input:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px #bbf7d0;
+    }
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #22c55e;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(22,163,74,0.4);
+    }
+    .btn-primary:hover {
+      background: #16a34a;
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+    .filter-badge {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .filter-badge span {
+      font-weight: 600;
+      color: #065f46;
+    }
+    
+    .table-container {
+      margin-top: 10px;
+      max-height: 500px; 
+      overflow: auto;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 900px;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      background: #f9fafb;
+      z-index: 10; 
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #f3f4f6;
+      white-space: nowrap;
+    }
+    th {
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 11px;
+    }
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    tbody tr:hover {
+      background: #ecfdf5;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    /* A classe .filter-row e seus estilos foram removidos/não são mais necessários */
+    
+    @media (max-width: 900px) {
+      .filters-panel {
+        padding: 14px 16px 14px;
+      }
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-actions {
+        margin-top: 10px;
+      }
+      .upload-area {
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+      .file-fixed-name {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Dashboard de Máquinas e Equipamentos</h1>
+      <p>Relatório Geral - Análise da Frota de Equipamentos Fixos e Móveis</p>
+    </div>
+    <div>
+      <div class="upload-area">
+        <span><strong>Dados de origem:</strong></span>
+        <span class="file-fixed-name">RELAÇÃO MAQUINAS E EQUIPAMENTOS.xlsx - Planilha1.csv</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="section-title">Resumo Geral da Frota</div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Total de Itens</div>
+        <div class="card-value" id="totalVeiculos">-</div>
+        <div class="card-sub">Total de registros na base</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ano Mais Recente</div>
+        <div class="card-value" id="anoMaisRecente">-</div>
+        <div class="card-sub">Ano do equipamento mais novo</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tipos de Itens Únicos</div>
+        <div class="card-value" id="tiposItensUnicos">-</div>
+        <div class="card-sub">Categorias distintas de equipamentos</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gestores Envolvidos</div>
+        <div class="card-value" id="totalGestores">-</div>
+        <div class="card-sub">Total de nomes de gestores únicos</div>
+      </div>
+    </div>
+
+    <div class="filters-panel">
+      <strong>Filtros de Seleção (Dropdowns)</strong>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="filtroItens">Categoria do Item</label>
+          <select id="filtroItens">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroCentro">Centro de Custo</label>
+          <select id="filtroCentro">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroCodProduto">Código do Produto/Placa</label>
+          <select id="filtroCodProduto">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroAno">Ano</label>
+          <select id="filtroAno">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filtroGestor">Gestor</label>
+          <select id="filtroGestor">
+            <option value="">(Todos)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Ações</label>
+          <div class="filter-actions">
+            <button class="btn btn-primary" id="btnAplicar">Aplicar filtros</button>
+            <button class="btn btn-secondary" id="btnLimpar">Limpar</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-badge" id="filtroResumo">
+        Nenhum filtro aplicado.
+      </div>
+    </div>
+    
+    <div class="section-title">Tabela de Dados (Relatório Geral de Equipamentos)</div>
+    <div class="table-container">
+      <table id="mainDataTable">
+        </table>
+    </div>
+
+    <div class="footer-note">
+      • Este dashboard foi gerado com base no arquivo "RELAÇÃO MAQUINAS E EQUIPAMENTOS.xlsx - Planilha1.csv".
+    </div>
+  </main>
+
+  <script>
+    // --- DADOS DA PLANILHA ---
+    const DADOS_ORIGINAIS_FIXOS = [
+        {"Item": "1", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200 UAP IV P16 DIESEL", "Código Do Produto/Placa": "4000.01993.0", "Ano": "2023", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "2", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200-4 UAP ", "Código Do Produto/Placa": "4000.02161.0", "Ano": "2024", "CENTRO DE CUSTO": "TRES LAGOAS", "Gestor": "NILTON GARCIA"},
+        {"Item": "3", "Itens": "CARRETA", "Equipamentos/Veiculos ": "MERCEDES BENZ ACTROS 2546LS", "Código Do Produto/Placa": "FPW8G23", "Ano": "2019", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
+        {"Item": "4", "Itens": "MUNCK", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "RKI6D06", "Ano": "2022", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "5", "Itens": "CAMINHÃO", "Equipamentos/Veiculos ": "VW/17.250 CNC", "Código Do Produto/Placa": "NVJ8H98", "Ano": "2011", "CENTRO DE CUSTO": "CARMOPOLIS", "Gestor": ""},
+        {"Item": "6", "Itens": "VACUO", "Equipamentos/Veiculos ": "VW/26.260 CRM 6X2", "Código Do Produto/Placa": "QMJ8C91", "Ano": "2025", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "7", "Itens": "MUNCK", "Equipamentos/Veiculos ": "VOLKSWAGEN 26320.0 6X", "Código Do Produto/Placa": "RRE7I66", "Ano": "2024", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"},
+        {"Item": "8", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "CESTO METALICO PARA 2 PESSOAS", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
+        {"Item": "9", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "COMPRESSOR DISMANN", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": ""},
+        {"Item": "10", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA A COMBUSTAO", "Código Do Produto/Placa": "H50XT.HY", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
+        {"Item": "11", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA COMBUSTAO YALE ", "Código Do Produto/Placa": "GP050MX_A2.YA", "Ano": "2023", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "12", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-125P", "Código Do Produto/Placa": "SC121PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
+        {"Item": "13", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-180F", "Código Do Produto/Placa": "SC181PCAE80", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "14", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-60P SL", "Código Do Produto/Placa": "SC590PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
+        {"Item": "15", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GERADOR QAS 55 Pd 220V QC2103", "Código Do Produto/Placa": "8970018530", "Ano": "2024", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "16", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "HIDROJATO CINOJET MOD 500/18", "Código Do Produto/Placa": "1743", "Ano": "2023", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "17", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "18", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "19", "Itens": "MUNCK", "Equipamentos/Veiculos ": "MERCEDES-BENZ ATEGO", "Código Do Produto/Placa": "SKP9H95", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "20", "Itens": "MUNCK", "Equipamentos/Veiculos ": "M.BENZ/ATEGO 2433CE", "Código Do Produto/Placa": "SKP0C57", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "21", "Itens": "ÔNIBUS", "Equipamentos/Veiculos ": "M.BENZ/ INDUSCAR APACHE U ", "Código Do Produto/Placa": "RIO3G87", "Ano": "2019", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "22", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "ROCADEIRA RHA JD 5000", "Código Do Produto/Placa": "VEIC_022349", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "23", "Itens": "TRATOR", "Equipamentos/Veiculos ": "TRATOR JOHN DEERE 5080E", "Código Do Produto/Placa": "VEIC_A04890", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "24", "Itens": "VACUO", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "TTF6C50", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "25", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP6B48", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "26", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8D07", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "27", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8E19", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "28", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8J29", "Ano": "2025", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"}
+    ];
+
+    // Mapeamento das chaves de dados para o nome da coluna no cabeçalho
+    const COLUNA_HEADERS = [
+        { key: "Itens", label: "Categoria" },
+        { key: "Equipamentos/Veiculos ", label: "Equipamento/Veículo" },
+        { key: "Código Do Produto/Placa", label: "Cód. Produto/Placa" },
+        { key: "Ano", label: "Ano" },
+        { key: "CENTRO DE CUSTO", label: "Centro de Custo" },
+        { key: "Gestor", label: "Gestor" }
+    ];
+
+    let dadosOriginais = DADOS_ORIGINAIS_FIXOS; 
+    let dadosFiltrados = [...dadosOriginais];
+    // A variável dadosPesquisados foi removida, pois não há busca em tempo real.
+    
+    // Variável global
+    const filtroResumo = document.getElementById('filtroResumo');
+    
+    // As variáveis relacionadas a filtros em tempo real (currentLiveFilters) foram removidas
+
+    document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
+    document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!Array.isArray(dadosOriginais) || dadosOriginais.length === 0) {
+        filtroResumo.textContent = 'Nenhum dado encontrado.';
+        return;
+      }
+      preencherFiltros(dadosOriginais);
+      processarDados(dadosFiltrados);
+      filtroResumo.textContent = 'Nenhum filtro aplicado (mostrando todos os registros).';
+    });
+
+    // --- FUNÇÕES DE FILTROS DE SELEÇÃO (DROPDOWNS) ---
+
+    function preencherFiltros(dados) {
+      const itensSet = new Set();
+      const centrosSet = new Set();
+      const codigosSet = new Set();
+      const anosSet = new Set();
+      const gestoresSet = new Set();
+
+      dados.forEach(l => {
+        if (l.Itens) itensSet.add(l.Itens);
+        if (l['CENTRO DE CUSTO']) centrosSet.add(l['CENTRO DE CUSTO']);
+        if (l['Código Do Produto/Placa']) codigosSet.add(l['Código Do Produto/Placa']); 
+        if (l.Ano) anosSet.add(l.Ano);
+        if (l.Gestor) gestoresSet.add(l.Gestor);
+      });
+
+      preencherSelect('filtroItens', itensSet);
+      preencherSelect('filtroCentro', centrosSet);
+      preencherSelect('filtroCodProduto', codigosSet);
+      preencherSelect('filtroGestor', gestoresSet);
+      
+      // Ordena por ano
+      preencherSelect('filtroAno', Array.from(anosSet).sort((a, b) => {
+          return b.toString().localeCompare(a.toString()); // Decrescente
+      }));
+    }
+
+    function preencherSelect(id, setValores) {
+      const select = document.getElementById(id);
+      const valorAtual = select.value;
+      select.innerHTML = '<option value="">(Todos)</option>';
+      
+      const valores = Array.isArray(setValores) ? setValores : Array.from(setValores);
+
+      valores
+        .sort((a, b) => a.toString().localeCompare(b.toString(), 'pt-BR'))
+        .forEach(valor => {
+          if (valor) { 
+            const option = document.createElement('option');
+            option.value = valor;
+            option.textContent = valor;
+            select.appendChild(option);
+          }
+        });
+
+      if (valorAtual) select.value = valorAtual;
+    }
+
+    function aplicarFiltros() {
+      const itensSel = document.getElementById('filtroItens').value;
+      const centroSel = document.getElementById('filtroCentro').value;
+      const codProdutoSel = document.getElementById('filtroCodProduto').value;
+      const anoSel = document.getElementById('filtroAno').value;
+      const gestorSel = document.getElementById('filtroGestor').value;
+
+      // 1. Aplica o filtro de seleção (dropdown) aos dados originais
+      dadosFiltrados = dadosOriginais.filter(l => {
+        const passaItens = !itensSel || l.Itens === itensSel;
+        const passaCentro = !centroSel || l['CENTRO DE CUSTO'] === centroSel;
+        const passaCodProduto = !codProdutoSel || l['Código Do Produto/Placa'] === codProdutoSel;
+        const passaAno = !anoSel || l.Ano === anoSel;
+        const passaGestor = !gestorSel || l.Gestor === gestorSel;
+        return passaItens && passaCentro && passaCodProduto && passaAno && passaGestor;
+      });
+
+      // 2. Processa os dados filtrados
+      processarDados(dadosFiltrados); 
+
+      // 3. Atualiza o resumo dos filtros
+      atualizarResumoFiltros(itensSel, centroSel, codProdutoSel, anoSel, gestorSel);
+    }
+
+    function limparFiltros() {
+      document.getElementById('filtroItens').value = '';
+      document.getElementById('filtroCentro').value = '';
+      document.getElementById('filtroCodProduto').value = '';
+      document.getElementById('filtroAno').value = '';
+      document.getElementById('filtroGestor').value = '';
+      
+      // Aplica o filtro (voltando para a lista completa)
+      aplicarFiltros();
+    }
+
+    function atualizarResumoFiltros(itensSel, centroSel, codProdutoSel, anoSel, gestorSel) {
+      const partes = [];
+      if (itensSel) partes.push(`Categoria: <span>${itensSel}</span>`);
+      if (centroSel) partes.push(`Centro de Custo: <span>${centroSel}</span>`);
+      if (codProdutoSel) partes.push(`Cód. Produto/Placa: <span>${codProdutoSel}</span>`);
+      if (anoSel) partes.push(`Ano: <span>${anoSel}</span>`);
+      if (gestorSel) partes.push(`Gestor: <span>${gestorSel}</span>`);
+
+      if (!partes.length) {
+        filtroResumo.innerHTML = 'Nenhum filtro aplicado (mostrando todos os registros).';
+      } else {
+        filtroResumo.innerHTML = 'Filtros ativos → ' + partes.join(' | ');
+      }
+    }
+
+
+    // --- FUNÇÕES DE RENDERIZAÇÃO ---
+
+    function processarDados(dados) {
+      if (!Array.isArray(dados) || dados.length === 0) {
+        atualizarResumo([]);
+        renderMainTable([]);
+        return;
+      }
+      atualizarResumo(dados);
+      renderMainTable(dados);
+    }
+
+    function atualizarResumo(dados) {
+      const totalItens = dados.length;
+      
+      const anos = dados.map(item => parseInt(item.Ano)).filter(year => !isNaN(year));
+      const anoMaisRecente = anos.length > 0 ? Math.max(...anos) : '-';
+      
+      const tiposUnicos = new Set(dados.map(d => d.Itens).filter(t => t));
+      const totalTipos = tiposUnicos.size;
+      
+      const gestoresUnicos = new Set(dados.map(d => d.Gestor).filter(g => g && g !== 'N/A' && g !== ''));
+      const totalGestores = gestoresUnicos.size;
+
+      document.getElementById('totalVeiculos').textContent = totalItens.toLocaleString('pt-BR');
+      document.getElementById('anoMaisRecente').textContent = anoMaisRecente;
+      document.getElementById('tiposItensUnicos').textContent = totalTipos.toLocaleString('pt-BR');
+      document.getElementById('totalGestores').textContent = totalGestores.toLocaleString('pt-BR');
+    }
+    
+    /**
+     * Gera o cabeçalho e o corpo da tabela principal (sem linha de filtros de busca).
+     */
+    function renderMainTable(dados) {
+        const table = document.getElementById('mainDataTable');
+        
+        const existingHeader = table.querySelector('thead');
+        
+        // Se o cabeçalho já existe, apenas atualiza o corpo
+        if (existingHeader) {
+            const dataBody = document.getElementById('dataBody');
+            renderTableBody(dados, dataBody);
+            return;
+        }
+
+        let theadHtml = '<thead>';
+        
+        // 1. Linha de Títulos (Nomes das Colunas)
+        theadHtml += '<tr class="header-row">';
+        COLUNA_HEADERS.forEach(col => {
+            theadHtml += `<th>${col.label}</th>`;
+        });
+        theadHtml += '</tr>';
+        
+        // A Linha de Filtros de Busca em Tempo Real foi removida daqui.
+        
+        theadHtml += '</thead>';
+        table.innerHTML = theadHtml;
+
+        // Cria e anexa o corpo da tabela
+        const tbodyElement = document.createElement('tbody');
+        tbodyElement.id = 'dataBody';
+        table.appendChild(tbodyElement);
+        
+        // Renderiza o corpo
+        renderTableBody(dados, tbodyElement);
+    }
+    
+    /**
+     * Renderiza o corpo da tabela principal.
+     */
+    function renderTableBody(dados, dataBody) {
+      dataBody.innerHTML = ''; 
+
+      // O número de colunas é determinado pelo COLUNA_HEADERS
+      const numColunas = COLUNA_HEADERS.length;
+
+      if (dados.length === 0) {
+        const row = dataBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = numColunas;
+        cell.textContent = 'Nenhum registro encontrado com os filtros aplicados.';
+        cell.style.textAlign = 'center';
+        cell.style.padding = '20px';
+        return;
+      }
+
+      dados.forEach(l => {
+        const row = dataBody.insertRow();
+        COLUNA_HEADERS.forEach(col => {
+            // Acessa o valor do dado usando a chave (key) definida em COLUNA_HEADERS
+            const valor = l[col.key];
+            row.insertCell().textContent = valor !== undefined && valor !== null && valor !== '' ? valor : '-';
+        });
+      });
+    }
+
+  </script>
+</body>
+</html>
