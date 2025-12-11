@@ -7,38 +7,75 @@
 <style>
     body {
         margin: 0;
-        font-family: Arial;
-        background: #f0f0f0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        height: 100vh;
+        position: relative;
         text-align: center;
     }
 
-    .titulo {
-        background: #2e7d32;
+    /* FUNDO COM LOGO */
+    .bg-logo {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.10;         /* Transparência suave */
+        z-index: 0;
+        width: 60%;            /* Ajuste do tamanho do fundo */
+        pointer-events: none;  /* Para não bloquear os cliques */
+    }
+
+    /* BARRA SUPERIOR */
+    .header {
+        background: #1B6E1A;
+        padding: 18px;
         color: white;
-        padding: 25px;
-        font-size: 26px;
+        font-size: 22px;
         font-weight: bold;
-        letter-spacing: 1px;
+        position: relative;
+        z-index: 2;
     }
 
+    /* BOTÃO VOLTAR */
+    .voltar {
+        position: absolute;
+        left: 20px;
+        top: 16px;
+        background: #c62828;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .voltar:hover {
+        background: #8e0000;
+    }
+
+    /* CONTAINER DOS BOTÕES */
     .container {
-        margin-top: 40px;
+        margin-top: 60px;
+        position: relative;
+        z-index: 2;
     }
 
+    /* BOTÕES PRINCIPAIS */
     .botao {
         display: block;
-        width: 320px;
+        width: 350px;
         margin: 18px auto;
-        padding: 18px;
-        font-size: 20px;
-        font-weight: bold;
+        padding: 16px;
         background: #4CAF50;
         color: white;
         text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
         border-radius: 10px;
         transition: 0.2s;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
-
     .botao:hover {
         background: #2e7d32;
         transform: scale(1.03);
@@ -48,8 +85,16 @@
 
 <body>
 
-<div class="titulo">DASHBOARD DA GCB MANUTENÇÃO</div>
+<!-- LOGO DE FUNDO -->
+<img src="https://marilenasantos-ctrl.github.io/gcbmanutencao-dashboards/logo.png" class="bg-logo">
 
+<!-- CABEÇALHO -->
+<div class="header">
+    <a href="javascript:history.back()" class="voltar">⬅ Voltar</a>
+    BEM VINDO AOS DASHBOARD DA GCB MANUTENÇÃO
+</div>
+
+<!-- BOTÕES -->
 <div class="container">
     <a href="combustiveis.html" class="botao">⛽ Dashboard de Combustíveis</a>
     <a href="veiculos.html" class="botao">🚚 Dashboard de Veículos</a>
