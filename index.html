@@ -8,75 +8,66 @@
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        height: 100vh;
-        position: relative;
+        background: white;
         text-align: center;
     }
 
-    /* FUNDO COM LOGO */
-    .bg-logo {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.10;
-        width: 60%;
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    /* BARRA SUPERIOR */
-    .header {
+    /* FAIXA SUPERIOR VERDE */
+    .topo {
         background: #1B6E1A;
-        padding: 22px;
+        padding: 25px 0;
         color: white;
-        font-size: 24px;
+        font-size: 26px;
         font-weight: bold;
-        position: relative;
-        z-index: 2;
     }
 
-    /* BOTÕES PRINCIPAIS */
-    .container {
-        margin-top: 70px;
-        position: relative;
-        z-index: 2;
+    /* LOGO CENTRAL */
+    .logo-container {
+        background: #1B6E1A;
+        padding: 30px 0;
+    }
+    .logo-container img {
+        width: 320px;
     }
 
+    /* CONTAINER DOS BOTÕES */
+    .botoes {
+        margin-top: 50px;
+    }
+
+    /* BOTÕES TIPO IBGE */
     .botao {
-        display: block;
-        width: 350px;
-        margin: 18px auto;
-        padding: 16px;
-        background: #4CAF50;
+        background: #1B6E1A;
         color: white;
+        border: none;
+        padding: 16px 35px;
+        font-size: 18px;
+        margin: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: inline-block;
+        width: 320px;
         text-decoration: none;
         font-weight: bold;
-        font-size: 18px;
-        border-radius: 10px;
         transition: 0.2s;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     }
     .botao:hover {
-        background: #2e7d32;
-        transform: scale(1.03);
+        background: #145213;
+        transform: scale(1.04);
     }
 </style>
 </head>
 
 <body>
 
-<!-- LOGO DE FUNDO -->
-<img src="logo.png" class="bg-logo">
-
-<!-- CABEÇALHO -->
-<div class="header">
-    BEM VINDO AOS DASHBOARD DA GCB MANUTENÇÃO
+<!-- FAIXA SUPERIOR COM LOGO ESTILO IBGE -->
+<div class="logo-container">
+    <img src="logo-gcb.png">
 </div>
 
-<!-- BOTÕES -->
-<div class="container">
+<!-- BOTÕES ESTILO IBGE → GCB -->
+<div class="botoes">
     <a href="combustiveis.html" class="botao">⛽ Dashboard de Combustíveis</a>
     <a href="veiculos.html" class="botao">🚚 Dashboard de Veículos</a>
     <a href="equipamentos.html" class="botao">🛠 Dashboard de Equipamentos</a>
