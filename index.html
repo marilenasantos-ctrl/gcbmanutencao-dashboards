@@ -4,66 +4,60 @@
 <meta charset="UTF-8">
 <title>Dashboard GCB</title>
 <style>
-
-    /* Fundo branco com logo suave no fundo */
+    /* Fundo branco com logo centralizada e suave */
     body {
         margin: 0;
         padding: 0;
-        background: #ffffff url('logo-gcb.png') no-repeat center 180px;
-        background-size: 420px; /* tamanho da logo no fundo */
-        opacity: 1;
+        background-color: #ffffff;
+        background-image: url('logo-gcb.png'); /* agora funciona */
+        background-repeat: no-repeat;
+        background-position: center 260px; /* ajusta a altura */
+        background-size: 420px; /* tamanho ideal da logo no fundo */
     }
 
-    /* Faixa verde superior */
-    .top-bar {
+    .topo {
         width: 100%;
-        background-color: #166b1f;
-        padding: 30px 0;
-        text-align: center;
-    }
-
-    .top-bar img {
-        height: 110px;
-    }
-
-    /* Container dos botões */
-    .menu-container {
-        margin-top: 60px;
-        display: flex;
-        justify-content: center;
-        gap: 60px;
-    }
-
-    /* Botões */
-    .menu-btn {
-        background-color: #1c7b29;
-        color: white;
-        padding: 18px 55px;
-        font-size: 20px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        text-decoration: none;
-        font-weight: bold;
+        background: #156c1d;
+        padding: 20px 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .topo img {
+        width: 420px;
+        height: auto;
+        display: block;
+    }
+
+    .menu-container {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .menu-botao {
+        background: #1b7d20;
+        color: white;
+        padding: 18px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
         transition: 0.2s;
     }
 
-    .menu-btn:hover {
-        background-color: #145a20;
-        transform: scale(1.04);
+    .menu-botao:hover {
+        background: #145a18;
+        transform: scale(1.05);
     }
-
-    /* Ícones */
-    .menu-btn span {
-        margin-right: 10px;
-        font-size: 22px;
-    }
-
 </style>
+
 </head>
 
 <body>
