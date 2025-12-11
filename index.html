@@ -20,48 +20,30 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        opacity: 0.10;         /* Transparência suave */
+        opacity: 0.10;
+        width: 60%;
         z-index: 0;
-        width: 60%;            /* Ajuste do tamanho do fundo */
-        pointer-events: none;  /* Para não bloquear os cliques */
+        pointer-events: none;
     }
 
     /* BARRA SUPERIOR */
     .header {
         background: #1B6E1A;
-        padding: 18px;
+        padding: 22px;
         color: white;
-        font-size: 22px;
+        font-size: 24px;
         font-weight: bold;
-        position: relative;
-        z-index: 2;
-    }
-
-    /* BOTÃO VOLTAR */
-    .voltar {
-        position: absolute;
-        left: 20px;
-        top: 16px;
-        background: #c62828;
-        color: white;
-        padding: 8px 14px;
-        border-radius: 6px;
-        font-weight: bold;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    .voltar:hover {
-        background: #8e0000;
-    }
-
-    /* CONTAINER DOS BOTÕES */
-    .container {
-        margin-top: 60px;
         position: relative;
         z-index: 2;
     }
 
     /* BOTÕES PRINCIPAIS */
+    .container {
+        margin-top: 70px;
+        position: relative;
+        z-index: 2;
+    }
+
     .botao {
         display: block;
         width: 350px;
@@ -86,11 +68,10 @@
 <body>
 
 <!-- LOGO DE FUNDO -->
-<img src="https://marilenasantos-ctrl.github.io/gcbmanutencao-dashboards/logo.png" class="bg-logo">
+<img src="logo.png" class="bg-logo">
 
 <!-- CABEÇALHO -->
 <div class="header">
-    <a href="javascript:history.back()" class="voltar">⬅ Voltar</a>
     BEM VINDO AOS DASHBOARD DA GCB MANUTENÇÃO
 </div>
 
