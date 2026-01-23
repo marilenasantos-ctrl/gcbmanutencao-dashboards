@@ -221,7 +221,6 @@
       font-size: 11px;
       color: #6b7280;
     }
-    /* A classe .filter-row e seus estilos foram removidos/não são mais necessários */
     
     @media (max-width: 900px) {
       .filters-panel {
@@ -252,7 +251,7 @@
     <div>
       <div class="upload-area">
         <span><strong>Dados de origem:</strong></span>
-        <span class="file-fixed-name">RELAÇÃO MAQUINAS E EQUIPAMENTOS.xlsx - Planilha1.csv</span>
+        <span class="file-fixed-name">RELAÇÃO MAQUINAS E EQUIPAMENTOS - Para atualização.csv</span>
       </div>
     </div>
   </header>
@@ -335,41 +334,61 @@
     </div>
 
     <div class="footer-note">
-      • Este dashboard foi gerado com base no arquivo "RELAÇÃO MAQUINAS E EQUIPAMENTOS.xlsx - Planilha1.csv".
+      • Este dashboard foi gerado com base no arquivo "RELAÇÃO MAQUINAS E EQUIPAMENTOS - Para atualização.csv".
     </div>
   </main>
 
   <script>
-    // --- DADOS DA PLANILHA ---
+    // --- DADOS DA PLANILHA ATUALIZADOS (48 Registros) ---
     const DADOS_ORIGINAIS_FIXOS = [
-        {"Item": "1", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200 UAP IV P16 DIESEL", "Código Do Produto/Placa": "4000.01993.0", "Ano": "2023", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "1", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200 UAP IV P16 DIESEL", "Código Do Produto/Placa": "4000.01993.0", "Ano": "2023", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
         {"Item": "2", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200-4 UAP ", "Código Do Produto/Placa": "4000.02161.0", "Ano": "2024", "CENTRO DE CUSTO": "TRES LAGOAS", "Gestor": "NILTON GARCIA"},
         {"Item": "3", "Itens": "CARRETA", "Equipamentos/Veiculos ": "MERCEDES BENZ ACTROS 2546LS", "Código Do Produto/Placa": "FPW8G23", "Ano": "2019", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "4", "Itens": "MUNCK", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "RKI6D06", "Ano": "2022", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "4", "Itens": "MUNCK", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "RKI6D06", "Ano": "2022", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
         {"Item": "5", "Itens": "CAMINHÃO", "Equipamentos/Veiculos ": "VW/17.250 CNC", "Código Do Produto/Placa": "NVJ8H98", "Ano": "2011", "CENTRO DE CUSTO": "CARMOPOLIS", "Gestor": ""},
-        {"Item": "6", "Itens": "VACUO", "Equipamentos/Veiculos ": "VW/26.260 CRM 6X2", "Código Do Produto/Placa": "QMJ8C91", "Ano": "2025", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "6", "Itens": "VACUO", "Equipamentos/Veiculos ": "VW/26.260 CRM 6X2", "Código Do Produto/Placa": "QMJ8C91", "Ano": "2025", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
         {"Item": "7", "Itens": "MUNCK", "Equipamentos/Veiculos ": "VOLKSWAGEN 26320.0 6X", "Código Do Produto/Placa": "RRE7I66", "Ano": "2024", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"},
         {"Item": "8", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "CESTO METALICO PARA 2 PESSOAS", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
         {"Item": "9", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "COMPRESSOR DISMANN", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": ""},
         {"Item": "10", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA A COMBUSTAO", "Código Do Produto/Placa": "H50XT.HY", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
-        {"Item": "11", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA COMBUSTAO YALE ", "Código Do Produto/Placa": "GP050MX_A2.YA", "Ano": "2023", "CENTRO DE CUSTO": "UTE MARIO LAGO", "Gestor": "JULIANO"},
+        {"Item": "11", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA COMBUSTAO YALE ", "Código Do Produto/Placa": "GP050MX_A2.YA", "Ano": "2023", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
         {"Item": "12", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-125P", "Código Do Produto/Placa": "SC121PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "13", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-180F", "Código Do Produto/Placa": "SC181PCAE80", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "13", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-180F", "Código Do Produto/Placa": "SC181PCAE80", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
         {"Item": "14", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-60P SL", "Código Do Produto/Placa": "SC590PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "15", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GERADOR QAS 55 Pd 220V QC2103", "Código Do Produto/Placa": "8970018530", "Ano": "2024", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "16", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "HIDROJATO CINOJET MOD 500/18", "Código Do Produto/Placa": "1743", "Ano": "2023", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "15", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GERADOR QAS 55 Pd 220V QC2103", "Código Do Produto/Placa": "8970018530", "Ano": "2024", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "16", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "HIDROJATO CINOJET MOD 500/18", "Código Do Produto/Placa": "1743", "Ano": "2023", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
         {"Item": "17", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
         {"Item": "18", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "19", "Itens": "MUNCK", "Equipamentos/Veiculos ": "MERCEDES-BENZ ATEGO", "Código Do Produto/Placa": "SKP9H95", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "20", "Itens": "MUNCK", "Equipamentos/Veiculos ": "M.BENZ/ATEGO 2433CE", "Código Do Produto/Placa": "SKP0C57", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "21", "Itens": "ÔNIBUS", "Equipamentos/Veiculos ": "M.BENZ/ INDUSCAR APACHE U ", "Código Do Produto/Placa": "RIO3G87", "Ano": "2019", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "19", "Itens": "MUNCK", "Equipamentos/Veiculos ": "MERCEDES-BENZ ATEGO", "Código Do Produto/Placa": "SKP9H95", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "20", "Itens": "MUNCK", "Equipamentos/Veiculos ": "M.BENZ/ATEGO 2433CE", "Código Do Produto/Placa": "SKP0C57", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "21", "Itens": "ÔNIBUS", "Equipamentos/Veiculos ": "M.BENZ/ INDUSCAR APACHE U ", "Código Do Produto/Placa": "RIO3G87", "Ano": "2019", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
         {"Item": "22", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "ROCADEIRA RHA JD 5000", "Código Do Produto/Placa": "VEIC_022349", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
         {"Item": "23", "Itens": "TRATOR", "Equipamentos/Veiculos ": "TRATOR JOHN DEERE 5080E", "Código Do Produto/Placa": "VEIC_A04890", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
         {"Item": "24", "Itens": "VACUO", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "TTF6C50", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "25", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP6B48", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "25", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP6B48", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
         {"Item": "26", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8D07", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "27", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8E19", "Ano": "2025", "CENTRO DE CUSTO": "PARADA REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "28", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8J29", "Ano": "2025", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"}
+        {"Item": "27", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8E19", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "28", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8J29", "Ano": "2025", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"},
+        {"Item": "29", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17967", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "30", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "31", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "32", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "33", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17967", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "34", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA) - NR 151", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "35", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA) - NR 042", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
+        {"Item": "36", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA)", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "37", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Soprador De Folhas Profissional A Gasolina 25,4cc 2 Tempos", "Código Do Produto/Placa": "296527", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "38", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Soprador De Folhas Profissional A Gasolina 25,4cc 2 Tempos", "Código Do Produto/Placa": "296528", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "39", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motoserra Elétrica 12 Polegadas Portátil C/2 Baterias 48v", "Código Do Produto/Placa": "32255", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "40", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motoserra Elétrica 12 Polegadas Portátil C/2 Baterias 48v", "Código Do Produto/Placa": "32255", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "41", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Stihl Fs 55", "Código Do Produto/Placa": "1312", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "42", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Stihl Fs 55", "Código Do Produto/Placa": "1311", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "43", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6387", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "44", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6388", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "45", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6181", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "46", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6182", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "47", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRES. HD 10/18 TRIF. 220V ", "Código Do Produto/Placa": "", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
+        {"Item": "48", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motosserra Gasolina Stihl 35,8cc Ms 182 1,6 Kw Profissional Cor Laranja", "Código Do Produto/Placa": "9186", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"}
     ];
 
     // Mapeamento das chaves de dados para o nome da coluna no cabeçalho
@@ -384,13 +403,10 @@
 
     let dadosOriginais = DADOS_ORIGINAIS_FIXOS; 
     let dadosFiltrados = [...dadosOriginais];
-    // A variável dadosPesquisados foi removida, pois não há busca em tempo real.
     
     // Variável global
     const filtroResumo = document.getElementById('filtroResumo');
     
-    // As variáveis relacionadas a filtros em tempo real (currentLiveFilters) foram removidas
-
     document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
     document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
 
@@ -440,14 +456,13 @@
       const valores = Array.isArray(setValores) ? setValores : Array.from(setValores);
 
       valores
+        .filter(v => v) // Remove valores vazios/nulos antes de ordenar
         .sort((a, b) => a.toString().localeCompare(b.toString(), 'pt-BR'))
         .forEach(valor => {
-          if (valor) { 
-            const option = document.createElement('option');
-            option.value = valor;
-            option.textContent = valor;
-            select.appendChild(option);
-          }
+          const option = document.createElement('option');
+          option.value = valor;
+          option.textContent = valor;
+          select.appendChild(option);
         });
 
       if (valorAtual) select.value = valorAtual;
@@ -462,11 +477,15 @@
 
       // 1. Aplica o filtro de seleção (dropdown) aos dados originais
       dadosFiltrados = dadosOriginais.filter(l => {
+        const gestorDado = l.Gestor || ''; 
+        
         const passaItens = !itensSel || l.Itens === itensSel;
         const passaCentro = !centroSel || l['CENTRO DE CUSTO'] === centroSel;
         const passaCodProduto = !codProdutoSel || l['Código Do Produto/Placa'] === codProdutoSel;
         const passaAno = !anoSel || l.Ano === anoSel;
-        const passaGestor = !gestorSel || l.Gestor === gestorSel;
+        // Filtra gestor tratando strings vazias ou nulas
+        const passaGestor = !gestorSel || (gestorDado === gestorSel); 
+        
         return passaItens && passaCentro && passaCodProduto && passaAno && passaGestor;
       });
 
@@ -525,7 +544,8 @@
       const tiposUnicos = new Set(dados.map(d => d.Itens).filter(t => t));
       const totalTipos = tiposUnicos.size;
       
-      const gestoresUnicos = new Set(dados.map(d => d.Gestor).filter(g => g && g !== 'N/A' && g !== ''));
+      // Contabiliza gestores únicos, ignorando strings vazias ou nulas
+      const gestoresUnicos = new Set(dados.map(d => d.Gestor).filter(g => g && g !== ''));
       const totalGestores = gestoresUnicos.size;
 
       document.getElementById('totalVeiculos').textContent = totalItens.toLocaleString('pt-BR');
@@ -557,8 +577,6 @@
             theadHtml += `<th>${col.label}</th>`;
         });
         theadHtml += '</tr>';
-        
-        // A Linha de Filtros de Busca em Tempo Real foi removida daqui.
         
         theadHtml += '</thead>';
         table.innerHTML = theadHtml;
