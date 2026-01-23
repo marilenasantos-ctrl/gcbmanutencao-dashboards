@@ -190,7 +190,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 12px;
-      min-width: 900px;
+      min-width: 1100px; 
     }
     thead {
       position: sticky;
@@ -250,7 +250,7 @@
     <div>
       <div class="upload-area">
         <span><strong>Dados de origem:</strong></span>
-        <span class="file-fixed-name">Relação Veículos (1).xlsx - Planilha1.csv</span>
+        <span class="file-fixed-name">Relação Veículos - atualizado.xlsx - Planilha1.csv</span> 
       </div>
     </div>
   </header>
@@ -313,6 +313,7 @@
             <option value="">(Todos)</option>
           </select>
         </div>
+        
         <div class="filter-group">
           <label>Ações</label>
           <div class="filter-actions">
@@ -339,6 +340,8 @@
             <th>Centro de Custo</th>
             <th>Gestor</th>
             <th>Renavam</th>
+            <th>Seguro</th>
+            <th>Locadora</th>
           </tr>
         </thead>
         <tbody id="dataBody"></tbody>
@@ -346,39 +349,53 @@
     </div>
 
     <div class="footer-note">
-      • Este dashboard foi gerado com base no arquivo "Relação Veículos (1).xlsx - Planilha1.csv".
+      • Este dashboard foi gerado com base no arquivo "Relação Veículos - atualizado.xlsx - Planilha1.csv".
     </div>
   </main>
 
   <script>
-    // Dados extraídos e consolidados do arquivo "Relação Veículos (1).xlsx - Planilha1.csv"
+    // Dados extraídos e consolidados do arquivo "Relação Veículos - atualizado.xlsx - Planilha1.csv"
+    // LOCADORA agora é uma string vazia ("") para veículos Próprios.
     const DADOS = [
-        // VEICULOS PROPRIOS
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "RENAULT/OROCH PRO 16", "PLACA": "RRD4F27", "ANO": "2024", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01357813632"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "RENAULT/OROCH PRO 16", "PLACA": "SKO4B46", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01424410859"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "MERCEDES BENZ GLA200 AMG LINE", "PLACA": "SKJ2A12", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01401020167"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RMY5G19", "ANO": "2021", "CENTRO DE CUSTO": "UN-BC", "GESTOR": "JOSE MAURICIO", "RENAVAM": "01262639490"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVA2F74", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01321104143"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVI6H54", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01325642042"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "HILUX SW4 SRX PLAT. 4X4", "PLACA": "SKQ5F52", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "1427317043"},
-        {"TIPO": "Próprio", "ITENS": "Carro", "VEÍCULOS": "VW/VOYAGE 1.6L MB5", "PLACA": "RGA3G60", "ANO": "2021", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "01246094786"},
-        {"TIPO": "Próprio", "ITENS": "Reboque", "VEÍCULOS": "R/RADIAL RCAM 751", "PLACA": "TTI5J74", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01435088937"},
-        {"TIPO": "Próprio", "ITENS": "Reboque", "VEÍCULOS": "R/RONE RCA 1E", "PLACA": "SKF0H54", "ANO": "2024", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01411146368"},
-        
-        // VEICULOS LOCADOS (Ano e Renavam vazios foram marcados como "N/A" para visualização)
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0", "PLACA": "TEI4C84", "ANO": "N/A", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0 FAST", "PLACA": "TEI4C27", "ANO": "N/A", "CENTRO DE CUSTO": "TRES LAGOAS", "GESTOR": "NILTON GARCIA", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TXO8H06", "ANO": "N/A", "CENTRO DE CUSTO": "TANQUES SUAPE", "GESTOR": "IVO", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEH0H96", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20S COMFORT PLUS TGDI FLEX AT 1.0", "PLACA": "TDG5J20", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "TJV9B32", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "SUN2F81", "ANO": "N/A", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "TERA HIGH TSI", "PLACA": "TES4I65", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 LIMITED FLEX 1.0", "PLACA": "TEP5A99", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "STRADA ENDURANCE CP FLEX 1.3", "PLACA": "SYS6J23", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "POLO TRACK 1.0", "PLACA": "TEO8I44", "ANO": "N/A", "CENTRO DE CUSTO": "REPLAN-PAULINIA", "GESTOR": "CARLOS JESUS", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEJ1I33", "ANO": "N/A", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "N/A"},
-        {"TIPO": "Locado", "ITENS": "Carro", "VEÍCULOS": "MOBI LIKE FLEX 1.0", "PLACA": "TXI4A14", "ANO": "N/A", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "N/A"},
+        // VEICULOS PROPRIOS (LOCADORA: "", SEGURO: "", RENAVAM: preenchido ou "")
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "DUSTER OROCH PRO 16", "PLACA": "RRD4F27", "ANO": "2024", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01357813632", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "DUSTER OROCH PRO 16", "PLACA": "SKO4B46", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01424410859", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "MERCEDES BENZ GLA200 AMG LINE", "PLACA": "SKJ2A12", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01401020167", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RMY5G19", "ANO": "2021", "CENTRO DE CUSTO": "UN-BC", "GESTOR": "JOSE MAURICIO", "RENAVAM": "01262639490", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVA2F74", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01321104143", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "FIAT/MOBI LIKE", "PLACA": "RVI6H54", "ANO": "2023", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01325642042", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "HILUX SW4 SRX PLAT. 4X4", "PLACA": "SKQ5F52", "ANO": "2025", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "1427317043", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRO", "VEÍCULOS": "VOLKSWAGEM VOYAGE 1.6L MB5", "PLACA": "RGA3G60", "ANO": "2021", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "01246094786", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "REBOQUE", "VEÍCULOS": "R/RADIAL RCAM 751", "PLACA": "TTI5J74", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "01435088937", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "REBOQUE", "VEÍCULOS": "R/RONE RCA 1E", "PLACA": "SKF0H54", "ANO": "2024", "CENTRO DE CUSTO": "SEDE-SSA", "GESTOR": "ANTONIO", "RENAVAM": "01411146368", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "CARRETA", "VEÍCULOS": "MERCEDES BENZ ACTROS 2546LS", "PLACA": "FPW8G23", "ANO": "2019", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "MUNCK", "VEÍCULOS": "IVECO/ TECTOR", "PLACA": "RKI6D05", "ANO": "2022", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VACUO", "VEÍCULOS": "VW/26.260 CRM 6X2", "PLACA": "QMJ8C91", "ANO": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "MUNCK", "VEÍCULOS": "VOLKSWAGEN 26320.0 6X", "PLACA": "RRE7I66", "ANO": "2024", "CENTRO DE CUSTO": "TANQUES SUAPE", "GESTOR": "IVO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "MUNCK", "VEÍCULOS": "MERCEDES-BENZ ATEGO", "PLACA": "SKP9H95", "ANO": "2025", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "MUNCK", "VEÍCULOS": "M.BENZ/ATEGO 2433CE", "PLACA": "SKP0C57", "ANO": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "ÔNIBUS", "VEÍCULOS": "M.BENZ/ INDUSCAR APACHE U", "PLACA": "RIO3G87", "ANO": "2019", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VACUO", "VEÍCULOS": "IVECO/ TECTOR", "PLACA": "TTF6C50", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VAN", "VEÍCULOS": "RENAULT MASTER", "PLACA": "SKP6B48", "ANO": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VAN", "VEÍCULOS": "RENAULT MASTER", "PLACA": "SKP8D07", "ANO": "2025", "CENTRO DE CUSTO": "LIMPEZA GASLUB", "GESTOR": "CLEBER", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VAN", "VEÍCULOS": "RENAULT MASTER", "PLACA": "SKP8E19", "ANO": "2025", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+        {"TIPO": "Próprio", "ITENS": "VAN", "VEÍCULOS": "RENAULT MASTER", "PLACA": "SKP8J29", "ANO": "2025", "CENTRO DE CUSTO": "TANQUES SUAPE", "GESTOR": "IVO", "RENAVAM": "", "SEGURO": "", "LOCADORA": ""},
+
+        // VEICULOS LOCADOS (LOCADORA: preenchida, ANO/RENAVAM/SEGURO: "")
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "MOBI LIKE FLEX 1.0", "PLACA": "TEI4C84", "ANO": "", "CENTRO DE CUSTO": "MARIO LAGO", "GESTOR": "JULIANO", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "MOBI LIKE FLEX 1.0 FAST", "PLACA": "TEI4C27", "ANO": "", "CENTRO DE CUSTO": "TRES LAGOAS", "GESTOR": "NILTON GARCIA", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TXO8H06", "ANO": "", "CENTRO DE CUSTO": "TANQUES SUAPE", "GESTOR": "IVO", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEH0H96", "ANO": "", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "HB20S COMFORT PLUS TGDI FLEX AT 1.0", "PLACA": "TDG5J20", "ANO": "", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "TJV9B32", "ANO": "", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "SAVEIRO ROBUST 1.6", "PLACA": "SUN2F81", "ANO": "", "CENTRO DE CUSTO": "REDUC", "GESTOR": "CARLOS JESUS", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "TERA HIGH TSI", "PLACA": "TES4I65", "ANO": "", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "HB20 LIMITED FLEX 1.0", "PLACA": "TEP5A99", "ANO": "", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "STRADA ENDURANCE CP FLEX 1.3", "PLACA": "SYS6J23", "ANO": "", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "HB20 COMFORT FLEX 1.0", "PLACA": "TEJ1I33", "ANO": "", "CENTRO DE CUSTO": "UTGCA 2026", "GESTOR": "ARI MOTA", "RENAVAM": "", "SEGURO": "", "LOCADORA": "LOCALIZA"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "KWID INTENSE 1.0", "PLACA": "TIY3F29", "ANO": "", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": "MOVIDAS"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "FIAT CRONOS", "PLACA": "TEQ0J84", "ANO": "", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": "UNIDAS"},
+        {"TIPO": "Locado", "ITENS": "CARRO", "VEÍCULOS": "ONIX", "PLACA": "TXH2E19", "ANO": "", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "GESTOR": "MARCELO", "RENAVAM": "", "SEGURO": "", "LOCADORA": "UNIDAS"},
     ];
 
     let dadosOriginais = [];
@@ -420,17 +437,17 @@
         if (l.TIPO) tiposSet.add(l.TIPO);
         if (l['CENTRO DE CUSTO']) centrosSet.add(l['CENTRO DE CUSTO']);
         if (l.PLACA) placasSet.add(l.PLACA);
-        if (l.ANO) anosSet.add(l.ANO);
+        // Garante que só anos válidos (não vazios) entrem nos filtros, mas o 'N/A' não será exibido se o valor for ""
+        if (l.ANO) anosSet.add(l.ANO); 
         if (l.GESTOR) gestoresSet.add(l.GESTOR);
       });
 
       preencherSelect('filtroTipo', tiposSet);
       preencherSelect('filtroCentro', centrosSet);
       preencherSelect('filtroPlaca', placasSet);
-      // Ordena por ano (numérico/alfabético, colocando N/A por último)
       preencherSelect('filtroAno', Array.from(anosSet).sort((a, b) => {
-          if (a === 'N/A') return 1;
-          if (b === 'N/A') return -1;
+          if (a === 'N/A' || a === '') return 1;
+          if (b === 'N/A' || b === '') return -1;
           return a.toString().localeCompare(b.toString());
       }));
       preencherSelect('filtroGestor', gestoresSet);
@@ -438,12 +455,15 @@
 
     function preencherSelect(id, setValores) {
       const select = document.getElementById(id);
+      if (!select) return; 
+
       const valorAtual = select.value;
       select.innerHTML = '<option value="">(Todos)</option>';
       
       const valores = Array.isArray(setValores) ? setValores : Array.from(setValores);
 
       valores
+        .filter(valor => valor !== "") // Filtra valores vazios para não aparecer no select (a opção "Todos" já cuida disso)
         .sort((a, b) => a.toString().localeCompare(b.toString(), 'pt-BR'))
         .forEach(valor => {
           if (valor) { 
@@ -517,7 +537,7 @@
       const veiculosLocados = dados.filter(d => d.TIPO === 'Locado').length;
       
       // Conta gestores únicos, ignorando vazios/N/A
-      const gestoresUnicos = new Set(dados.map(d => d.GESTOR).filter(g => g && g !== 'N/A'));
+      const gestoresUnicos = new Set(dados.map(d => d.GESTOR).filter(g => g && g !== 'N/A' && g !== ''));
       const totalGestores = gestoresUnicos.size;
 
       document.getElementById('totalVeiculos').textContent = totalVeiculos.toLocaleString('pt-BR');
@@ -533,7 +553,7 @@
       if (dados.length === 0) {
         const row = dataBody.insertRow();
         const cell = row.insertCell();
-        cell.colSpan = 8;
+        cell.colSpan = 10;
         cell.textContent = 'Nenhum registro encontrado com os filtros aplicados.';
         cell.style.textAlign = 'center';
         cell.style.padding = '20px';
@@ -542,6 +562,7 @@
 
       dados.forEach(l => {
         const row = dataBody.insertRow();
+        // A função de renderização exibe '-' se o campo for nulo ou vazio
         row.insertCell().textContent = l.TIPO || '-';
         row.insertCell().textContent = l.ITENS || '-';
         row.insertCell().textContent = l.VEÍCULOS || '-';
@@ -550,6 +571,8 @@
         row.insertCell().textContent = l['CENTRO DE CUSTO'] || '-';
         row.insertCell().textContent = l.GESTOR || '-';
         row.insertCell().textContent = l.RENAVAM || '-';
+        row.insertCell().textContent = l.SEGURO || '-';
+        row.insertCell().textContent = l.LOCADORA || '-'; // Agora será '-' para veículos próprios
       });
     }
 
