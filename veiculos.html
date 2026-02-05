@@ -304,23 +304,34 @@ fetch('Relacao_Veiculos.csv')
     processar(dadosFiltrados);
   });
 
+function normalizar(str) {
+  return str
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '_')
+    .trim();
+}
+
 function csvParaObj(csv) {
   const linhas = csv.split('\n').filter(l => l.trim());
-  const header = linhas.shift().split(',').map(h => h.trim().toUpperCase());
+  const headersOriginais = linhas.shift().split(',').map(h => h.trim());
+  const headers = headersOriginais.map(h => normalizar(h));
+
   return linhas.map(l => {
     const valores = l.split(',');
     const obj = {};
-    header.forEach((h, i) => obj[h] = valores[i]?.trim() || '');
+    headers.forEach((h, i) => obj[h] = valores[i]?.trim() || '');
     return obj;
   });
 }
 
+/* ===== FILTROS ===== */
 function preencherFiltros(d) {
-  preencher('filtroTipo', d.map(x => x.TIPO));
-  preencher('filtroCentro', d.map(x => x['CENTRO DE CUSTO']));
-  preencher('filtroPlaca', d.map(x => x.PLACA));
-  preencher('filtroAno', d.map(x => x.ANO));
-  preencher('filtroGestor', d.map(x => x.GESTOR));
+  preencher('filtroTipo', d.map(x => x.tipo));
+  preencher('filtroCentro', d.map(x => x.centro_de_custo));
+  preencher('filtroPlaca', d.map(x => x.placa));
+  preencher('filtroAno', d.map(x => x.ano));
+  preencher('filtroGestor', d.map(x => x.gestor));
 }
 
 function preencher(id, arr) {
@@ -331,14 +342,15 @@ function preencher(id, arr) {
   });
 }
 
+/* ===== AÇÕES ===== */
 function aplicarFiltros() {
   const f = id => document.getElementById(id).value;
   dadosFiltrados = dadosOriginais.filter(d =>
-    (!f('filtroTipo') || d.TIPO === f('filtroTipo')) &&
-    (!f('filtroCentro') || d['CENTRO DE CUSTO'] === f('filtroCentro')) &&
-    (!f('filtroPlaca') || d.PLACA === f('filtroPlaca')) &&
-    (!f('filtroAno') || d.ANO === f('filtroAno')) &&
-    (!f('filtroGestor') || d.GESTOR === f('filtroGestor'))
+    (!f('filtroTipo') || d.tipo === f('filtroTipo')) &&
+    (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
+    (!f('filtroPlaca') || d.placa === f('filtroPlaca')) &&
+    (!f('filtroAno') || d.ano === f('filtroAno')) &&
+    (!f('filtroGestor') || d.gestor === f('filtroGestor'))
   );
   processar(dadosFiltrados);
   document.getElementById('filtroResumo').textContent = 'Filtros aplicados.';
@@ -351,37 +363,49 @@ function limparFiltros() {
     'Nenhum filtro aplicado (mostrando todos os registros).';
 }
 
+/* ===== PROCESSAMENTO ===== */
 function processar(d) {
   document.getElementById('totalVeiculos').textContent = d.length;
-  document.getElementById('veiculosProprios').textContent = d.filter(x => x.TIPO === 'Próprio').length;
-  document.getElementById('veiculosLocados').textContent = d.filter(x => x.TIPO === 'Locado').length;
-  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.GESTOR)).size;
+
+  document.getElementById('veiculosProprios').textContent =
+    d.filter(x => x.tipo.toUpperCase() === 'PRÓPRIO').length;
+
+  document.getElementById('veiculosLocados').textContent =
+    d.filter(x => x.tipo.toUpperCase() === 'LOCADO').length;
+
+  document.getElementById('totalGestores').textContent =
+    new Set(d.map(x => x.gestor).filter(v => v)).size;
+
   montarTabela(d);
 }
 
+/* ===== TABELA ===== */
 function montarTabela(d) {
   const tbody = document.getElementById('dataBody');
   tbody.innerHTML = '';
-  d.forEach(x => {
+  d.forEach((x, i) => {
     tbody.innerHTML += `
       <tr>
-        <td>${x.ITEM}</td>
-        <td>${x.TIPO}</td>
-        <td>${x.VEÍCULOS}</td>
-        <td>${x.PLACA}</td>
-        <td>${x.ANO}</td>
-        <td>${x['CENTRO DE CUSTO']}</td>
-        <td>${x.GESTOR}</td>
-        <td>${x.USUÁRIO}</td>
-        <td>${x.LOCADORA}</td>
-        <td>${x.RENAVAM}</td>
+        <td>${i + 1}</td>
+        <td>${x.tipo}</td>
+        <td>${x.veiculos}</td>
+        <td>${x.placa}</td>
+        <td>${x.ano}</td>
+        <td>${x.centro_de_custo}</td>
+        <td>${x.gestor}</td>
+        <td>${x.usuario}</td>
+        <td>${x.locadora}</td>
+        <td>${x.renavam}</td>
       </tr>`;
   });
 }
 
+/* ===== BOTÕES ===== */
 document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
 document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
 </script>
 
+
 </body>
 </html>
+
