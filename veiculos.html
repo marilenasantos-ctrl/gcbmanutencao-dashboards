@@ -314,13 +314,24 @@ function normalizar(str) {
 
 function csvParaObj(csv) {
   const linhas = csv.split('\n').filter(l => l.trim());
-  const headersOriginais = linhas.shift().split(',').map(h => h.trim());
-  const headers = headersOriginais.map(h => normalizar(h));
+
+  // 🔍 detectar separador automaticamente
+  const separador = linhas[0].includes(';') ? ';' : ',';
+
+  const headersOriginais = linhas.shift().split(separador).map(h => h.trim());
+
+  const headers = headersOriginais.map(h =>
+    h.toLowerCase()
+     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+     .replace(/\s+/g, '_')
+  );
 
   return linhas.map(l => {
-    const valores = l.split(',');
+    const valores = l.split(separador);
     const obj = {};
-    headers.forEach((h, i) => obj[h] = valores[i]?.trim() || '');
+    headers.forEach((h, i) => {
+      obj[h] = valores[i]?.trim() || '';
+    });
     return obj;
   });
 }
@@ -408,4 +419,5 @@ document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
 
 </body>
 </html>
+
 
