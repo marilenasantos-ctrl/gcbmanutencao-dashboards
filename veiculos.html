@@ -7,8 +7,14 @@
 
   <style>
     * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
-    body { margin: 0; background: #f3f4f6; color: #111827; }
 
+    body {
+      margin: 0;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    /* ===== HEADER ===== */
     header {
       background: #f9fafb;
       border-bottom: 1px solid #e5e7eb;
@@ -43,7 +49,9 @@
       color: #374151;
     }
 
-    .btn-voltar:hover { background: #d1d5db; }
+    .btn-voltar:hover {
+      background: #d1d5db;
+    }
 
     .upload-area {
       background: #ecfdf5;
@@ -55,8 +63,20 @@
       white-space: nowrap;
     }
 
-    main { padding: 24px; max-width: 1400px; margin: auto; }
+    main {
+      padding: 24px;
+      max-width: 1400px;
+      margin: auto;
+    }
 
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 8px 0 12px 4px;
+    }
+
+    /* ===== CARDS ===== */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -66,14 +86,31 @@
     .card {
       background: #fff;
       border-radius: 16px;
-      padding: 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 4px 10px rgba(0,0,0,.05);
+      padding: 18px;
+      border: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
     }
 
-    .card-title { font-size: 11px; text-transform: uppercase; color: #6b7280; }
-    .card-value { font-size: 22px; font-weight: 700; color: #065f46; }
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
 
+    .card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #065f46;
+      margin-top: 4px;
+    }
+
+    .card-sub {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    /* ===== FILTERS ===== */
     .filters-panel {
       background: #fff;
       margin-top: 24px;
@@ -89,13 +126,24 @@
       margin-top: 12px;
     }
 
-    .filter-group label { font-size: 11px; color: #4b5563; }
+    .filter-group label {
+      font-size: 11px;
+      color: #4b5563;
+    }
+
     .filter-group select {
       width: 100%;
-      padding: 7px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       font-size: 12px;
+    }
+
+    .filter-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -107,9 +155,23 @@
       cursor: pointer;
     }
 
-    .btn-primary { background: #22c55e; color: #fff; }
-    .btn-secondary { background: #e5e7eb; }
+    .btn-primary {
+      background: #22c55e;
+      color: #fff;
+    }
 
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    #filtroResumo {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    /* ===== TABLE ===== */
     .table-container {
       margin-top: 24px;
       background: #fff;
@@ -129,9 +191,14 @@
       padding: 8px 10px;
       border-bottom: 1px solid #f3f4f6;
       white-space: nowrap;
+      text-align: left;
     }
 
-    th { background: #f9fafb; font-size: 11px; color: #4b5563; }
+    th {
+      background: #f9fafb;
+      font-size: 11px;
+      color: #4b5563;
+    }
   </style>
 </head>
 
@@ -139,12 +206,10 @@
 
 <header>
   <div style="display:flex; align-items:center; gap:12px;">
-    <button class="btn-voltar" onclick="window.location.href='index.html'">
-  ⬅ Voltar
-</button>
+    <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
     <div>
       <h1>Dashboard de Veículos</h1>
-      <p>Relatório Geral da Frota</p>
+      <p>Relatório Geral - Análise da Frota (Próprios e Locados)</p>
     </div>
   </div>
 
@@ -155,39 +220,53 @@
 
 <main>
 
+  <div class="section-title">Resumo Geral da Frota</div>
+
   <div class="cards">
     <div class="card">
       <div class="card-title">Total de Veículos</div>
       <div class="card-value" id="totalVeiculos">-</div>
+      <div class="card-sub">Total de registros na base (Próprios + Locados)</div>
     </div>
+
     <div class="card">
-      <div class="card-title">Próprios</div>
+      <div class="card-title">Veículos Próprios</div>
       <div class="card-value" id="veiculosProprios">-</div>
+      <div class="card-sub">Total na seção de Próprios</div>
     </div>
+
     <div class="card">
-      <div class="card-title">Locados</div>
+      <div class="card-title">Veículos Locados</div>
       <div class="card-value" id="veiculosLocados">-</div>
+      <div class="card-sub">Total na seção de Locados</div>
     </div>
+
     <div class="card">
-      <div class="card-title">Gestores</div>
+      <div class="card-title">Gestores Envolvidos</div>
       <div class="card-value" id="totalGestores">-</div>
+      <div class="card-sub">Total de nomes de gestores únicos</div>
     </div>
   </div>
 
   <div class="filters-panel">
     <strong>Filtros</strong>
+
     <div class="filters-grid">
       <div class="filter-group"><label>Tipo</label><select id="filtroTipo"></select></div>
       <div class="filter-group"><label>Centro de Custo</label><select id="filtroCentro"></select></div>
       <div class="filter-group"><label>Placa</label><select id="filtroPlaca"></select></div>
       <div class="filter-group"><label>Ano</label><select id="filtroAno"></select></div>
       <div class="filter-group"><label>Gestor</label><select id="filtroGestor"></select></div>
-      <div class="filter-group">
-        <button class="btn btn-primary" onclick="aplicarFiltros()">Aplicar</button>
-        <button class="btn btn-secondary" onclick="limparFiltros()">Limpar</button>
-      </div>
     </div>
-    <div id="filtroResumo" style="margin-top:8px;font-size:11px;"></div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" id="btnAplicar">Aplicar filtros</button>
+      <button class="btn btn-secondary" id="btnLimpar">Limpar</button>
+    </div>
+
+    <div id="filtroResumo">
+      Nenhum filtro aplicado (mostrando todos os registros).
+    </div>
   </div>
 
   <div class="table-container">
@@ -262,11 +341,14 @@ function aplicarFiltros() {
     (!f('filtroGestor') || d.GESTOR === f('filtroGestor'))
   );
   processar(dadosFiltrados);
+  document.getElementById('filtroResumo').textContent = 'Filtros aplicados.';
 }
 
 function limparFiltros() {
   document.querySelectorAll('select').forEach(s => s.value = '');
   processar(dadosOriginais);
+  document.getElementById('filtroResumo').textContent =
+    'Nenhum filtro aplicado (mostrando todos os registros).';
 }
 
 function processar(d) {
@@ -296,6 +378,9 @@ function montarTabela(d) {
       </tr>`;
   });
 }
+
+document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
+document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
 </script>
 
 </body>
