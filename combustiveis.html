@@ -132,9 +132,25 @@
       });
     });
 
+    // FUNÇÃO ATUALIZADA PARA TRATAR NÚMEROS
     function limparNum(v) {
       if(!v) return 0;
-      return parseFloat(v.toString().replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+      let str = v.toString().replace(/[R$\s]/g, ''); // Remove R$ e espaços
+      
+      // Se tem vírgula e ponto juntos, precisamos descobrir quem é o decimal
+      if (str.includes(',') && str.includes('.')) {
+          if (str.indexOf('.') > str.indexOf(',')) {
+              str = str.replace(/,/g, ''); // Padrão US (1,234.56)
+          } else {
+              str = str.replace(/\./g, '').replace(',', '.'); // Padrão BR (1.234,56)
+          }
+      } 
+      // Se tem só vírgula (ex: 1234,56)
+      else if (str.includes(',')) {
+          str = str.replace(',', '.');
+      }
+      
+      return parseFloat(str) || 0;
     }
 
     function preencherSelects(dados) {
