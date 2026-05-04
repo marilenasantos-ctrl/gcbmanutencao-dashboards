@@ -57,9 +57,9 @@
 
     /* ===== FILTROS ===== */
     .filters-panel { background: #fff; margin-top: 24px; padding: 20px; border-radius: 16px; border: 1px solid #e5e7eb; }
-    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 12px; align-items: end; }
+    .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 12px; align-items: end; }
     .filter-group label { font-size: 11px; color: #4b5563; display: block; margin-bottom: 5px; }
-    .filter-group select { width: 100%; padding: 8px 12px; border-radius: 999px; border: 1px solid #d1d5db; font-size: 12px; background: #f9fafb; outline: none; }
+    .filter-group select, .filter-group input { width: 100%; padding: 8px 12px; border-radius: 999px; border: 1px solid #d1d5db; font-size: 12px; background: #f9fafb; outline: none; }
     
     .btn-primary { background: #22c55e; color: #fff; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 12px; }
     .btn-secondary { background: #e5e7eb; color: #374151; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 12px; }
@@ -83,7 +83,7 @@
       <p>Análise da Frota - GCB Manutenção</p>
     </div>
   </div>
-  <div class="status-area" id="status-arquivo">A carregar dados...</div>
+  <div class="status-area" id="status-arquivo">Carregando dados...</div>
 </header>
 
 <main>
@@ -114,7 +114,12 @@
       <div class="filter-group"><label>Centro de Custo</label><select id="filtroCentro"></select></div>
       <div class="filter-group"><label>Placa</label><select id="filtroPlaca"></select></div>
       <div class="filter-group"><label>Ano</label><select id="filtroAno"></select></div>
-      <div class="filter-group"><label>Gestor</label><select id="filtroGestor"></select></div>
+      
+      <div class="filter-group">
+        <label>Buscar Locadora</label>
+        <input type="text" id="filtroLocadora" placeholder="Ex: Localiza...">
+      </div>
+
       <div class="filter-group" style="display:flex; gap:8px;">
         <button class="btn-primary" onclick="aplicarFiltros()">Aplicar</button>
         <button class="btn-secondary" onclick="limparFiltros()">Limpar</button>
@@ -147,27 +152,28 @@ let dadosOriginais = [];
 let dadosFiltrados = [];
 
 window.addEventListener('DOMContentLoaded', () => {
-  // NOME DO FICHEIRO CORRIGIDO (Renomeie no GitHub para Relacao_Veiculos.csv)
   const NOME_ARQUIVO = 'Relacao_Veiculos.csv';
 
   Papa.parse(NOME_ARQUIVO, {
     download: true,
     header: true,
-    skipEmptyLines: true,
-    // Normaliza os nomes das colunas para evitar erros com acentos ou espaços
+    skipEmptyLines: 'greedy', // Força o descarte de linhas totalmente vazias que o Excel cria
     transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim(),
     complete: function(results) {
       
-      // FILTRO DE SEGURANÇA: Remove linhas vazias ou a linha de "TOTAL" da planilha
+      // NOVA TRAVA MAIS FLEXÍVEL: Mantém seus 2 veículos e remove apenas a linha de Total
       dadosOriginais = results.data.filter(linha => {
-        const temDados = linha.placa || linha.veiculos || linha.tipo;
-        const textoPosto = (linha.tipo || '').toUpperCase() + (linha.veiculos || '').toUpperCase();
-        const naoETotal = !textoPosto.includes('TOTAL');
-        return temDados && naoETotal;
+        // Junta todos os valores da linha. Se a linha inteira for vazia, descarta.
+        const todosValores = Object.values(linha).join('').trim();
+        if (!todosValores) return false;
+
+        // Descarta apenas se tiver "TOTAL" escrito em algum campo principal
+        const textoBusca = ((linha.tipo || '') + (linha.veiculos || '') + (linha.centro_de_custo || '')).toUpperCase();
+        return !textoBusca.includes('TOTAL');
       });
 
       dadosFiltrados = [...dadosOriginais];
-      document.getElementById('status-arquivo').textContent = "Base: " + NOME_ARQUIVO;
+      document.getElementById('status-arquivo').textContent = "Base carregada com sucesso!";
       
       preencherFiltros(dadosOriginais);
       processar(dadosFiltrados);
@@ -175,7 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
     error: function(err) {
       document.getElementById('status-arquivo').style.background = "#fee2e2";
       document.getElementById('status-arquivo').style.color = "#991b1b";
-      document.getElementById('status-arquivo').textContent = "Erro: Ficheiro não encontrado no servidor.";
+      document.getElementById('status-arquivo').textContent = "Erro: Arquivo não encontrado.";
       console.error("Erro PapaParse:", err);
     }
   });
@@ -186,7 +192,6 @@ function preencherFiltros(d) {
   preencher('filtroCentro', d.map(x => x.centro_de_custo));
   preencher('filtroPlaca', d.map(x => x.placa));
   preencher('filtroAno', d.map(x => x.ano));
-  preencher('filtroGestor', d.map(x => x.gestor));
 }
 
 function preencher(id, arr) {
@@ -199,20 +204,23 @@ function preencher(id, arr) {
 
 function aplicarFiltros() {
   const f = id => document.getElementById(id).value;
+  // Pega o valor digitado na locadora, transformando em minúsculo para a busca não dar erro
+  const fLocadora = document.getElementById('filtroLocadora').value.toLowerCase().trim();
   
   dadosFiltrados = dadosOriginais.filter(d => 
     (!f('filtroTipo') || d.tipo === f('filtroTipo')) &&
     (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
     (!f('filtroPlaca') || d.placa === f('filtroPlaca')) &&
     (!f('filtroAno') || d.ano === f('filtroAno')) &&
-    (!f('filtroGestor') || d.gestor === f('filtroGestor'))
+    // Verifica se a locadora do veículo inclui o texto que foi digitado
+    (!fLocadora || (d.locadora && d.locadora.toLowerCase().includes(fLocadora)))
   );
   
   processar(dadosFiltrados);
 }
 
 function limparFiltros() {
-  document.querySelectorAll('select').forEach(s => s.value = '');
+  document.querySelectorAll('select, input').forEach(s => s.value = '');
   dadosFiltrados = [...dadosOriginais];
   processar(dadosFiltrados);
 }
@@ -220,13 +228,12 @@ function limparFiltros() {
 function processar(d) {
   document.getElementById('totalVeiculos').textContent = d.length;
 
-  // Contagem inteligente para Próprios e Locados
   const proprios = d.filter(x => (x.tipo || '').toUpperCase().includes('PR')).length;
   const locados = d.filter(x => (x.tipo || '').toUpperCase().includes('LOC')).length;
   
   document.getElementById('veiculosProprios').textContent = proprios;
   document.getElementById('veiculosLocados').textContent = locados;
-  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.gestor).filter(v => v)).size;
+  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.gestor).filter(v => v && v.trim())).size;
 
   montarTabela(d);
 }
