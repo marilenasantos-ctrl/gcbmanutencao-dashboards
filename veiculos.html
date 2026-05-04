@@ -9,46 +9,30 @@
   <style>
     * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
     body { margin: 0; background: #f3f4f6; color: #111827; }
-
-    /* ===== HEADER ===== */
     header { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     header h1 { margin: 0; font-size: 20px; color: #065f46; }
     header p { margin: 4px 0 0; font-size: 13px; color: #6b7280; }
-    
     .btn-voltar { background: #e5e7eb; border: none; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; color: #374151; }
-    .btn-voltar:hover { background: #d1d5db; }
-    
-    .upload-area { background: #ecfdf5; color: #065f46; padding: 10px 16px; border-radius: 999px; border: 1px solid #a7f3d0; font-size: 13px; white-space: nowrap; }
+    .upload-area { background: #ecfdf5; color: #065f46; padding: 10px 16px; border-radius: 999px; border: 1px solid #a7f3d0; font-size: 13px; }
     main { padding: 24px; max-width: 1400px; margin: auto; }
-
-    /* ===== SECTION TITLE ===== */
     .section-title { font-size: 15px; font-weight: 600; margin: 8px 0 12px 4px; }
-
-    /* ===== CARDS ===== */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-    .card { background: #fff; border-radius: 16px; padding: 18px; border: none; box-shadow: 0 6px 16px rgba(0,0,0,.06); }
+    .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 6px 16px rgba(0,0,0,.06); }
     .card-title { font-size: 11px; text-transform: uppercase; color: #6b7280; }
     .card-value { font-size: 22px; font-weight: 700; color: #065f46; margin-top: 4px; }
     .card-sub { margin-top: 6px; font-size: 11px; color: #6b7280; }
-
-    /* ===== FILTERS ===== */
     .filters-panel { background: #fff; margin-top: 24px; padding: 16px; border-radius: 16px; border: 1px solid #e5e7eb; }
     .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
     .filter-group label { font-size: 11px; color: #4b5563; }
     .filter-group select { width: 100%; padding: 7px 12px; border-radius: 999px; border: 1px solid #d1d5db; font-size: 12px; }
-    .filter-actions { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
-    
+    .filter-actions { margin-top: 14px; display: flex; gap: 8px; }
     .btn { padding: 7px 14px; border-radius: 999px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; }
     .btn-primary { background: #22c55e; color: #fff; }
     .btn-secondary { background: #e5e7eb; color: #374151; }
-    #filtroResumo { margin-top: 8px; font-size: 11px; color: #6b7280; }
-
-    /* ===== TABLE ===== */
     .table-container { margin-top: 24px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: auto; max-height: 500px; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1100px; }
-    thead { position: sticky; top: 0; background: #f9fafb; z-index: 1; }
-    th, td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; white-space: nowrap; text-align: left; }
-    th { font-size: 11px; color: #4b5563; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; text-align: left; }
+    th { background: #f9fafb; font-size: 11px; color: #4b5563; }
   </style>
 </head>
 
@@ -58,37 +42,21 @@
     <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar</button>
     <div>
       <h1>Dashboard de Veículos</h1>
-      <p>Relatório Geral - Análise da Frota (Próprios e Locados)</p>
+      <p>Relatório Geral - Análise da Frota</p>
     </div>
   </div>
-  <div class="upload-area">
-    Dados de origem: Relação Veículo.csv
+  <div class="upload-area" id="status-arquivo">
+    Carregando: Relação Veículo.csv...
   </div>
 </header>
 
 <main>
   <div class="section-title">Resumo Geral da Frota</div>
   <div class="cards">
-    <div class="card">
-      <div class="card-title">Total de Veículos</div>
-      <div class="card-value" id="totalVeiculos">-</div>
-      <div class="card-sub">Total de registros na base</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Veículos Próprios</div>
-      <div class="card-value" id="veiculosProprios">-</div>
-      <div class="card-sub">Total na seção de Próprios</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Veículos Locados</div>
-      <div class="card-value" id="veiculosLocados">-</div>
-      <div class="card-sub">Total na seção de Locados</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Gestores Envolvidos</div>
-      <div class="card-value" id="totalGestores">-</div>
-      <div class="card-sub">Nomes de gestores únicos</div>
-    </div>
+    <div class="card"><div class="card-title">Total de Veículos</div><div class="card-value" id="totalVeiculos">-</div></div>
+    <div class="card"><div class="card-title">Veículos Próprios</div><div class="card-value" id="veiculosProprios">-</div></div>
+    <div class="card"><div class="card-title">Veículos Locados</div><div class="card-value" id="veiculosLocados">-</div></div>
+    <div class="card"><div class="card-title">Gestores</div><div class="card-value" id="totalGestores">-</div></div>
   </div>
 
   <div class="filters-panel">
@@ -104,26 +72,12 @@
       <button class="btn btn-primary" id="btnAplicar">Aplicar filtros</button>
       <button class="btn btn-secondary" id="btnLimpar">Limpar</button>
     </div>
-    <div id="filtroResumo">
-      Nenhum filtro aplicado (mostrando todos os registros).
-    </div>
   </div>
 
   <div class="table-container">
     <table>
       <thead>
-        <tr>
-          <th>Item</th>
-          <th>Tipo</th>
-          <th>Veículos</th>
-          <th>Placa</th>
-          <th>Ano</th>
-          <th>Centro de Custo</th>
-          <th>Gestor</th>
-          <th>Usuário</th>
-          <th>Locadora</th>
-          <th>Renavam</th>
-        </tr>
+        <tr><th>Item</th><th>Tipo</th><th>Veículos</th><th>Placa</th><th>Ano</th><th>Centro de Custo</th><th>Gestor</th><th>Usuário</th><th>Locadora</th><th>Renavam</th></tr>
       </thead>
       <tbody id="dataBody"></tbody>
     </table>
@@ -134,26 +88,33 @@
 let dadosOriginais = [];
 let dadosFiltrados = [];
 
-// Usando o PapaParse com o NOME EXATO do arquivo que está no seu GitHub
 window.addEventListener('DOMContentLoaded', () => {
-  Papa.parse('Relação Veículo.csv', {
+  // ATENÇÃO: Nome exato conforme seu print do GitHub
+  const nomeArquivo = 'Relação Veículo.csv';
+
+  Papa.parse(nomeArquivo, {
     download: true,
     header: true,
     skipEmptyLines: true,
-    // Essa função transforma "Centro de Custo" em "centro_de_custo" para facilitar o código
-    transformHeader: function(header) {
-      return header.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim();
-    },
+    transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim(),
     complete: function(results) {
+      if (results.data.length === 0) {
+        alert("O arquivo foi encontrado, mas parece estar vazio.");
+        return;
+      }
       dadosOriginais = results.data;
       dadosFiltrados = [...dadosOriginais];
+      document.getElementById('status-arquivo').textContent = "Arquivo carregado com sucesso!";
       preencherFiltros(dadosOriginais);
       processar(dadosFiltrados);
+    },
+    error: function(err) {
+      alert("ERRO AO CARREGAR: Verifique se o arquivo '" + nomeArquivo + "' está na mesma pasta do HTML no GitHub.");
+      console.error(err);
     }
   });
 });
 
-/* ===== FILTROS ===== */
 function preencherFiltros(d) {
   preencher('filtroTipo', d.map(x => x.tipo));
   preencher('filtroCentro', d.map(x => x.centro_de_custo));
@@ -165,16 +126,13 @@ function preencherFiltros(d) {
 function preencher(id, arr) {
   const s = document.getElementById(id);
   s.innerHTML = '<option value="">Todos</option>';
-  // Remove vazios e duplicatas antes de criar as opções
   [...new Set(arr.filter(v => v))].sort().forEach(v => {
     s.innerHTML += `<option value="${v}">${v}</option>`;
   });
 }
 
-/* ===== AÇÕES ===== */
 function aplicarFiltros() {
   const f = id => document.getElementById(id).value;
-  
   dadosFiltrados = dadosOriginais.filter(d => 
     (!f('filtroTipo') || d.tipo === f('filtroTipo')) &&
     (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
@@ -182,44 +140,27 @@ function aplicarFiltros() {
     (!f('filtroAno') || d.ano === f('filtroAno')) &&
     (!f('filtroGestor') || d.gestor === f('filtroGestor'))
   );
-  
   processar(dadosFiltrados);
-  document.getElementById('filtroResumo').textContent = `Filtros aplicados. Mostrando ${dadosFiltrados.length} registro(s).`;
 }
 
 function limparFiltros() {
   document.querySelectorAll('select').forEach(s => s.value = '');
-  dadosFiltrados = [...dadosOriginais];
   processar(dadosOriginais);
-  document.getElementById('filtroResumo').textContent = 'Nenhum filtro aplicado (mostrando todos os registros).';
 }
 
-/* ===== PROCESSAMENTO ===== */
 function processar(d) {
   document.getElementById('totalVeiculos').textContent = d.length;
-
-  // A trava (x.tipo || '') evita que o código quebre caso alguma linha venha vazia
-  document.getElementById('veiculosProprios').textContent = 
-    d.filter(x => (x.tipo || '').toUpperCase() === 'PRÓPRIO').length;
-
-  document.getElementById('veiculosLocados').textContent = 
-    d.filter(x => (x.tipo || '').toUpperCase() === 'LOCADO').length;
-
-  document.getElementById('totalGestores').textContent = 
-    new Set(d.map(x => x.gestor).filter(v => v)).size;
-
+  document.getElementById('veiculosProprios').textContent = d.filter(x => (x.tipo || '').toUpperCase().includes('PR')).length;
+  document.getElementById('veiculosLocados').textContent = d.filter(x => (x.tipo || '').toUpperCase().includes('LOC')).length;
+  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.gestor).filter(v => v)).size;
   montarTabela(d);
 }
 
-/* ===== TABELA ===== */
 function montarTabela(d) {
   const tbody = document.getElementById('dataBody');
   tbody.innerHTML = '';
-  
   d.forEach((x, i) => {
-    // Usamos (x.variavel || '-') para que, se não houver a informação, ele coloque um traço em vez de "undefined"
-    tbody.innerHTML += `
-      <tr>
+    tbody.innerHTML += `<tr>
         <td>${i + 1}</td>
         <td>${x.tipo || '-'}</td>
         <td>${x.veiculos || '-'}</td>
@@ -234,11 +175,8 @@ function montarTabela(d) {
   });
 }
 
-/* ===== EVENTOS DOS BOTÕES ===== */
 document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
 document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
-
 </script>
-
 </body>
 </html>
