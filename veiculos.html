@@ -9,68 +9,27 @@
   <style>
     * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
     body { margin: 0; padding: 0; background: #f3f4f6; color: #111827; }
-    
-    /* ===== CABEÇALHO ===== */
-    header { 
-      background: #f9fafb; 
-      border-bottom: 1px solid #e5e7eb; 
-      padding: 16px 24px; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      gap: 16px; 
-      flex-wrap: wrap; 
-    }
+    header { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     header h1 { margin: 0; font-size: 20px; color: #065f46; }
-    header p { margin: 4px 0 0; font-size: 13px; color: #6b7280; }
-    
-    .btn-voltar { 
-      background: #e5e7eb; 
-      border: none; 
-      border-radius: 999px; 
-      padding: 8px 16px; 
-      font-size: 12px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      color: #374151; 
-      transition: 0.2s;
-    }
-    .btn-voltar:hover { background: #d1d5db; }
-    
-    .status-area { 
-      background: #ecfdf5; 
-      color: #065f46; 
-      padding: 10px 16px; 
-      border-radius: 999px; 
-      border: 1px solid #a7f3d0; 
-      font-size: 13px; 
-    }
-
+    .btn-voltar { background: #e5e7eb; border: none; border-radius: 999px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; color: #374151; }
+    .status-area { background: #ecfdf5; color: #065f46; padding: 10px 16px; border-radius: 999px; border: 1px solid #a7f3d0; font-size: 13px; }
     main { padding: 24px; max-width: 1400px; margin: auto; }
-
-    /* ===== CARTÕES ===== */
     .section-title { font-size: 15px; font-weight: 600; margin: 8px 0 12px 4px; }
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 6px 16px rgba(0,0,0,.06); border: 1px solid #e5e7eb; }
-    .card-title { font-size: 11px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.05em; }
+    .card-title { font-size: 11px; text-transform: uppercase; color: #6b7280; }
     .card-value { font-size: 24px; font-weight: 700; color: #065f46; margin-top: 6px; }
-
-    /* ===== FILTROS ===== */
     .filters-panel { background: #fff; margin-top: 24px; padding: 20px; border-radius: 16px; border: 1px solid #e5e7eb; }
     .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 12px; align-items: end; }
     .filter-group label { font-size: 11px; color: #4b5563; display: block; margin-bottom: 5px; }
     .filter-group select, .filter-group input { width: 100%; padding: 8px 12px; border-radius: 999px; border: 1px solid #d1d5db; font-size: 12px; background: #f9fafb; outline: none; }
-    
-    .btn-primary { background: #22c55e; color: #fff; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 12px; }
-    .btn-secondary { background: #e5e7eb; color: #374151; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 12px; }
-
-    /* ===== TABELA ===== */
+    .btn-primary { background: #22c55e; color: #fff; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: #e5e7eb; color: #374151; border: none; padding: 9px 20px; border-radius: 999px; font-weight: 600; cursor: pointer; }
     .table-container { margin-top: 24px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: auto; max-height: 550px; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
     thead { position: sticky; top: 0; background: #f9fafb; z-index: 1; }
     th, td { padding: 12px 15px; border-bottom: 1px solid #f3f4f6; text-align: left; }
     th { font-weight: 600; color: #4b5563; text-transform: uppercase; font-size: 10px; }
-    tr:hover { background-color: #f9fafb; }
   </style>
 </head>
 
@@ -83,28 +42,16 @@
       <p>Análise da Frota - GCB Manutenção</p>
     </div>
   </div>
-  <div class="status-area" id="status-arquivo">A carregar dados...</div>
+  <div class="status-area" id="status-arquivo">A verificar ficheiro...</div>
 </header>
 
 <main>
   <div class="section-title">Resumo Geral da Frota</div>
   <div class="cards">
-    <div class="card">
-      <div class="card-title">Total de Veículos</div>
-      <div class="card-value" id="totalVeiculos">-</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Veículos Próprios</div>
-      <div class="card-value" id="veiculosProprios">-</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Veículos Locados</div>
-      <div class="card-value" id="veiculosLocados">-</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Gestores Únicos</div>
-      <div class="card-value" id="totalGestores">-</div>
-    </div>
+    <div class="card"><div class="card-title">Total de Veículos</div><div class="card-value" id="totalVeiculos">-</div></div>
+    <div class="card"><div class="card-title">Veículos Próprios</div><div class="card-value" id="veiculosProprios">-</div></div>
+    <div class="card"><div class="card-title">Veículos Locados</div><div class="card-value" id="veiculosLocados">-</div></div>
+    <div class="card"><div class="card-title">Gestores Únicos</div><div class="card-value" id="totalGestores">-</div></div>
   </div>
 
   <div class="filters-panel">
@@ -114,12 +61,7 @@
       <div class="filter-group"><label>Centro de Custo</label><select id="filtroCentro"></select></div>
       <div class="filter-group"><label>Placa</label><select id="filtroPlaca"></select></div>
       <div class="filter-group"><label>Ano</label><select id="filtroAno"></select></div>
-      
-      <div class="filter-group">
-        <label>Buscar Locadora</label>
-        <input type="text" id="filtroLocadora" placeholder="Ex: Localiza...">
-      </div>
-
+      <div class="filter-group"><label>Buscar Locadora</label><input type="text" id="filtroLocadora" placeholder="Ex: Localiza..."></div>
       <div class="filter-group" style="display:flex; gap:8px;">
         <button class="btn-primary" onclick="aplicarFiltros()">Aplicar</button>
         <button class="btn-secondary" onclick="limparFiltros()">Limpar</button>
@@ -130,17 +72,7 @@
   <div class="table-container">
     <table>
       <thead>
-        <tr>
-          <th>Item</th>
-          <th>Tipo</th>
-          <th>Veículo</th>
-          <th>Placa</th>
-          <th>Ano</th>
-          <th>Centro de Custo</th>
-          <th>Gestor</th>
-          <th>Usuário</th>
-          <th>Locadora</th>
-        </tr>
+        <tr><th>Item</th><th>Tipo</th><th>Veículo</th><th>Placa</th><th>Ano</th><th>Centro de Custo</th><th>Gestor</th><th>Usuário</th><th>Locadora</th></tr>
       </thead>
       <tbody id="dataBody"></tbody>
     </table>
@@ -152,64 +84,54 @@ let dadosOriginais = [];
 let dadosFiltrados = [];
 
 window.addEventListener('DOMContentLoaded', () => {
-  const NOME_ARQUIVO = 'Relacao_Veiculos.csv';
+  // Anti-cache: adiciona um número aleatório ao fim do nome do ficheiro
+  const urlCSV = 'Relacao_Veiculos.csv?v=' + Date.now();
 
-  Papa.parse(NOME_ARQUIVO, {
+  Papa.parse(urlCSV, {
     download: true,
     header: true,
-    skipEmptyLines: 'greedy', 
+    skipEmptyLines: 'greedy',
+    // transformHeader remove acentos e espaços dos nomes das colunas
     transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim(),
     complete: function(results) {
-      
-      // NOVA LÓGICA DE SEGURANÇA: Protege os veículos "TOTAL FLEX"
+      // Filtra para manter todos os 46 veículos e remover apenas linhas de "TOTAL" real
       dadosOriginais = results.data.filter(linha => {
-        // Ignora linhas totalmente vazias
-        const todosValores = Object.values(linha).join('').trim();
-        if (!todosValores) return false;
+        const valores = Object.values(linha).join('').trim();
+        if (!valores) return false;
 
-        // Apenas exclui se a coluna "tipo" ou "centro_de_custo" ou "item" for EXATAMENTE a palavra "TOTAL".
+        // Só descarta se a palavra "TOTAL" estiver isolada numa destas colunas
         const tipo = (linha.tipo || '').toUpperCase().trim();
-        const centro = (linha.centro_de_custo || '').toUpperCase().trim();
         const item = (linha.item || '').toUpperCase().trim();
-
-        const isLinhaDeSoma = (tipo === 'TOTAL' || centro === 'TOTAL' || item === 'TOTAL');
-        
-        return !isLinhaDeSoma; // Mantém a linha se não for a linha de soma
+        return tipo !== 'TOTAL' && item !== 'TOTAL';
       });
 
       dadosFiltrados = [...dadosOriginais];
-      document.getElementById('status-arquivo').textContent = "Base carregada com sucesso!";
-      
+      document.getElementById('status-arquivo').textContent = "Base carregada: " + dadosOriginais.length + " veículos.";
       preencherFiltros(dadosOriginais);
       processar(dadosFiltrados);
     },
     error: function(err) {
-      document.getElementById('status-arquivo').style.background = "#fee2e2";
-      document.getElementById('status-arquivo').style.color = "#991b1b";
-      document.getElementById('status-arquivo').textContent = "Erro: Ficheiro não encontrado.";
-      console.error("Erro PapaParse:", err);
+      document.getElementById('status-arquivo').textContent = "Erro ao carregar ficheiro.";
+      alert("ERRO: O navegador não encontrou o ficheiro 'Relacao_Veiculos.csv'. Verifique se o nome no GitHub está IGUAL (incluindo maiúsculas).");
     }
   });
 });
 
 function preencherFiltros(d) {
-  preencher('filtroTipo', d.map(x => x.tipo));
-  preencher('filtroCentro', d.map(x => x.centro_de_custo));
-  preencher('filtroPlaca', d.map(x => x.placa));
-  preencher('filtroAno', d.map(x => x.ano));
-}
-
-function preencher(id, arr) {
-  const s = document.getElementById(id);
-  s.innerHTML = '<option value="">(Todos)</option>';
-  [...new Set(arr.filter(v => v && v.trim() !== ''))].sort().forEach(v => {
-    s.innerHTML += `<option value="${v}">${v}</option>`;
-  });
+  const criarOpcoes = (id, campo) => {
+    const s = document.getElementById(id);
+    s.innerHTML = '<option value="">(Todos)</option>';
+    const unicos = [...new Set(d.map(x => x[campo]).filter(v => v))].sort();
+    unicos.forEach(v => s.innerHTML += `<option value="${v}">${v}</option>`);
+  };
+  criarOpcoes('filtroTipo', 'tipo');
+  criarOpcoes('filtroCentro', 'centro_de_custo');
+  criarOpcoes('filtroPlaca', 'placa');
+  criarOpcoes('filtroAno', 'ano');
 }
 
 function aplicarFiltros() {
   const f = id => document.getElementById(id).value;
-  // Obtém o valor digitado na locadora em minúsculas para não dar erro
   const fLocadora = document.getElementById('filtroLocadora').value.toLowerCase().trim();
   
   dadosFiltrados = dadosOriginais.filter(d => 
@@ -217,39 +139,27 @@ function aplicarFiltros() {
     (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
     (!f('filtroPlaca') || d.placa === f('filtroPlaca')) &&
     (!f('filtroAno') || d.ano === f('filtroAno')) &&
-    // Verifica se a locadora inclui o texto digitado no filtro
     (!fLocadora || (d.locadora && d.locadora.toLowerCase().includes(fLocadora)))
   );
-  
   processar(dadosFiltrados);
 }
 
 function limparFiltros() {
-  document.querySelectorAll('select, input').forEach(s => s.value = '');
+  document.querySelectorAll('select, input').forEach(el => el.value = '');
   dadosFiltrados = [...dadosOriginais];
   processar(dadosFiltrados);
 }
 
 function processar(d) {
   document.getElementById('totalVeiculos').textContent = d.length;
-
-  const proprios = d.filter(x => (x.tipo || '').toUpperCase().includes('PR')).length;
-  const locados = d.filter(x => (x.tipo || '').toUpperCase().includes('LOC')).length;
+  document.getElementById('veiculosProprios').textContent = d.filter(x => (x.tipo || '').toUpperCase().includes('PR')).length;
+  document.getElementById('veiculosLocados').textContent = d.filter(x => (x.tipo || '').toUpperCase().includes('LOC')).length;
+  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.gestor).filter(v => v)).size;
   
-  document.getElementById('veiculosProprios').textContent = proprios;
-  document.getElementById('veiculosLocados').textContent = locados;
-  document.getElementById('totalGestores').textContent = new Set(d.map(x => x.gestor).filter(v => v && v.trim())).size;
-
-  montarTabela(d);
-}
-
-function montarTabela(d) {
   const tbody = document.getElementById('dataBody');
   tbody.innerHTML = '';
-  
   d.forEach((x, i) => {
-    tbody.innerHTML += `
-      <tr>
+    tbody.innerHTML += `<tr>
         <td>${i + 1}</td>
         <td style="font-weight:600; color:#065f46">${x.tipo || '-'}</td>
         <td>${x.veiculos || '-'}</td>
