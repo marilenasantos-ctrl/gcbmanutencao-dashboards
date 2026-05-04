@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8" />
   <title>Dashboard de Veículos - GCB</title>
@@ -10,7 +10,7 @@
     * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
     body { margin: 0; padding: 0; background: #f3f4f6; color: #111827; }
     
-    /* ===== HEADER ===== */
+    /* ===== CABEÇALHO ===== */
     header { 
       background: #f9fafb; 
       border-bottom: 1px solid #e5e7eb; 
@@ -48,7 +48,7 @@
 
     main { padding: 24px; max-width: 1400px; margin: auto; }
 
-    /* ===== CARDS ===== */
+    /* ===== CARTÕES ===== */
     .section-title { font-size: 15px; font-weight: 600; margin: 8px 0 12px 4px; }
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 6px 16px rgba(0,0,0,.06); border: 1px solid #e5e7eb; }
@@ -83,7 +83,7 @@
       <p>Análise da Frota - GCB Manutenção</p>
     </div>
   </div>
-  <div class="status-area" id="status-arquivo">Carregando dados...</div>
+  <div class="status-area" id="status-arquivo">A carregar dados...</div>
 </header>
 
 <main>
@@ -157,19 +157,24 @@ window.addEventListener('DOMContentLoaded', () => {
   Papa.parse(NOME_ARQUIVO, {
     download: true,
     header: true,
-    skipEmptyLines: 'greedy', // Força o descarte de linhas totalmente vazias que o Excel cria
+    skipEmptyLines: 'greedy', 
     transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim(),
     complete: function(results) {
       
-      // NOVA TRAVA MAIS FLEXÍVEL: Mantém seus 2 veículos e remove apenas a linha de Total
+      // NOVA LÓGICA DE SEGURANÇA: Protege os veículos "TOTAL FLEX"
       dadosOriginais = results.data.filter(linha => {
-        // Junta todos os valores da linha. Se a linha inteira for vazia, descarta.
+        // Ignora linhas totalmente vazias
         const todosValores = Object.values(linha).join('').trim();
         if (!todosValores) return false;
 
-        // Descarta apenas se tiver "TOTAL" escrito em algum campo principal
-        const textoBusca = ((linha.tipo || '') + (linha.veiculos || '') + (linha.centro_de_custo || '')).toUpperCase();
-        return !textoBusca.includes('TOTAL');
+        // Apenas exclui se a coluna "tipo" ou "centro_de_custo" ou "item" for EXATAMENTE a palavra "TOTAL".
+        const tipo = (linha.tipo || '').toUpperCase().trim();
+        const centro = (linha.centro_de_custo || '').toUpperCase().trim();
+        const item = (linha.item || '').toUpperCase().trim();
+
+        const isLinhaDeSoma = (tipo === 'TOTAL' || centro === 'TOTAL' || item === 'TOTAL');
+        
+        return !isLinhaDeSoma; // Mantém a linha se não for a linha de soma
       });
 
       dadosFiltrados = [...dadosOriginais];
@@ -181,7 +186,7 @@ window.addEventListener('DOMContentLoaded', () => {
     error: function(err) {
       document.getElementById('status-arquivo').style.background = "#fee2e2";
       document.getElementById('status-arquivo').style.color = "#991b1b";
-      document.getElementById('status-arquivo').textContent = "Erro: Arquivo não encontrado.";
+      document.getElementById('status-arquivo').textContent = "Erro: Ficheiro não encontrado.";
       console.error("Erro PapaParse:", err);
     }
   });
@@ -204,7 +209,7 @@ function preencher(id, arr) {
 
 function aplicarFiltros() {
   const f = id => document.getElementById(id).value;
-  // Pega o valor digitado na locadora, transformando em minúsculo para a busca não dar erro
+  // Obtém o valor digitado na locadora em minúsculas para não dar erro
   const fLocadora = document.getElementById('filtroLocadora').value.toLowerCase().trim();
   
   dadosFiltrados = dadosOriginais.filter(d => 
@@ -212,7 +217,7 @@ function aplicarFiltros() {
     (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
     (!f('filtroPlaca') || d.placa === f('filtroPlaca')) &&
     (!f('filtroAno') || d.ano === f('filtroAno')) &&
-    // Verifica se a locadora do veículo inclui o texto que foi digitado
+    // Verifica se a locadora inclui o texto digitado no filtro
     (!fLocadora || (d.locadora && d.locadora.toLowerCase().includes(fLocadora)))
   );
   
