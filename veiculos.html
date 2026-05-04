@@ -62,7 +62,7 @@
     </div>
   </div>
   <div class="upload-area">
-    Dados de origem: Relacao_Veiculos.csv
+    Dados de origem: Relação Veículo.csv
   </div>
 </header>
 
@@ -134,9 +134,9 @@
 let dadosOriginais = [];
 let dadosFiltrados = [];
 
-// Usando o PapaParse para ler o arquivo de forma inteligente e evitar erros de caracteres invisíveis
+// Usando o PapaParse com o NOME EXATO do arquivo que está no seu GitHub
 window.addEventListener('DOMContentLoaded', () => {
-  Papa.parse('Relacao_Veiculos.csv', {
+  Papa.parse('Relação Veículo.csv', {
     download: true,
     header: true,
     skipEmptyLines: true,
