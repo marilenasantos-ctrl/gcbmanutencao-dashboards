@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <title>Dashboard de Máquinas e Equipamentos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    /* Estilos CSS adaptados do layout anterior */
     * {
       box-sizing: border-box;
       font-family: Arial, Helvetica, sans-serif;
@@ -48,14 +48,6 @@
       border: 1px solid #a7f3d0;
       max-width: 100%;
       white-space: nowrap;
-    }
-    .file-fixed-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: #065f46;
-      max-width: 260px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     main {
       padding: 20px 24px 40px;
@@ -107,10 +99,6 @@
       border: 1px solid #e5e7eb;
       margin-top: 18px;
     }
-    .filters-panel > strong {
-      font-size: 13px;
-      color: #111827;
-    }
     .filters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -124,8 +112,7 @@
       display: block;
       margin-bottom: 3px;
     }
-    .filter-group select,
-    .filter-group input {
+    .filter-group select {
       width: 100%;
       padding: 7px 9px;
       border-radius: 999px;
@@ -133,11 +120,6 @@
       font-size: 12px;
       background: #f9fafb;
       outline: none;
-    }
-    .filter-group select:focus,
-    .filter-group input:focus {
-      border-color: #22c55e;
-      box-shadow: 0 0 0 1px #bbf7d0;
     }
     .filter-actions {
       display: flex;
@@ -155,28 +137,16 @@
     .btn-primary {
       background: #22c55e;
       color: #ffffff;
-      box-shadow: 0 2px 4px rgba(22,163,74,0.4);
-    }
-    .btn-primary:hover {
-      background: #16a34a;
     }
     .btn-secondary {
       background: #e5e7eb;
       color: #374151;
-    }
-    .btn-secondary:hover {
-      background: #d1d5db;
     }
     .filter-badge {
       margin-top: 8px;
       font-size: 11px;
       color: #6b7280;
     }
-    .filter-badge span {
-      font-weight: 600;
-      color: #065f46;
-    }
-    
     .table-container {
       margin-top: 10px;
       max-height: 500px; 
@@ -210,48 +180,25 @@
       color: #4b5563;
       font-size: 11px;
     }
-    tbody tr:nth-child(even) {
-      background: #f9fafb;
-    }
     tbody tr:hover {
       background: #ecfdf5;
     }
-    .footer-note {
-      margin-top: 18px;
-      font-size: 11px;
-      color: #6b7280;
-    }
-    
     @media (max-width: 900px) {
-      .filters-panel {
-        padding: 14px 16px 14px;
-      }
-      .filters-grid {
-        grid-template-columns: 1fr;
-      }
-      .filter-actions {
-        margin-top: 10px;
-      }
-      .upload-area {
-        flex-wrap: wrap;
-        white-space: normal;
-      }
-      .file-fixed-name {
-        max-width: 100%;
-      }
+      .filters-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <div>
+      <button class="btn btn-secondary" style="margin-bottom: 10px;" onclick="window.history.back()">⬅ Voltar</button>
       <h1>Dashboard de Máquinas e Equipamentos</h1>
       <p>Relatório Geral - Análise da Frota de Equipamentos Fixos e Móveis</p>
     </div>
     <div>
       <div class="upload-area">
         <span><strong>Dados de origem:</strong></span>
-        <span class="file-fixed-name">RELAÇÃO MAQUINAS E EQUIPAMENTOS - Para atualização.csv</span>
+        <span id="status-arquivo">Carregando Planilha do Google...</span>
       </div>
     </div>
   </header>
@@ -285,34 +232,24 @@
       <strong>Filtros de Seleção (Dropdowns)</strong>
       <div class="filters-grid">
         <div class="filter-group">
-          <label for="filtroItens">Categoria do Item</label>
-          <select id="filtroItens">
-            <option value="">(Todos)</option>
-          </select>
+          <label>Categoria do Item</label>
+          <select id="filtroItens"><option value="">(Todos)</option></select>
         </div>
         <div class="filter-group">
-          <label for="filtroCentro">Centro de Custo</label>
-          <select id="filtroCentro">
-            <option value="">(Todos)</option>
-          </select>
+          <label>Centro de Custo</label>
+          <select id="filtroCentro"><option value="">(Todos)</option></select>
         </div>
         <div class="filter-group">
-          <label for="filtroCodProduto">Código do Produto/Placa</label>
-          <select id="filtroCodProduto">
-            <option value="">(Todos)</option>
-          </select>
+          <label>Código do Produto/Placa</label>
+          <select id="filtroCodProduto"><option value="">(Todos)</option></select>
         </div>
         <div class="filter-group">
-          <label for="filtroAno">Ano</label>
-          <select id="filtroAno">
-            <option value="">(Todos)</option>
-          </select>
+          <label>Ano</label>
+          <select id="filtroAno"><option value="">(Todos)</option></select>
         </div>
         <div class="filter-group">
-          <label for="filtroGestor">Gestor</label>
-          <select id="filtroGestor">
-            <option value="">(Todos)</option>
-          </select>
+          <label>Gestor</label>
+          <select id="filtroGestor"><option value="">(Todos)</option></select>
         </div>
         <div class="filter-group">
           <label>Ações</label>
@@ -322,303 +259,172 @@
           </div>
         </div>
       </div>
-      <div class="filter-badge" id="filtroResumo">
-        Nenhum filtro aplicado.
-      </div>
-    </div>
-    
-    <div class="section-title">Tabela de Dados (Relatório Geral de Equipamentos)</div>
-    <div class="table-container">
-      <table id="mainDataTable">
-        </table>
+      <div class="filter-badge" id="filtroResumo">Carregando dados...</div>
     </div>
 
-    <div class="footer-note">
-      • Este dashboard foi gerado com base no arquivo "RELAÇÃO MAQUINAS E EQUIPAMENTOS - Para atualização.csv".
+    <div class="section-title">Tabela de Dados (Relatório Geral de Equipamentos)</div>
+    <div class="table-container">
+      <table id="mainDataTable"></table>
     </div>
   </main>
 
   <script>
-    // --- DADOS DA PLANILHA ATUALIZADOS (48 Registros) ---
-    const DADOS_ORIGINAIS_FIXOS = [
-        {"Item": "1", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200 UAP IV P16 DIESEL", "Código Do Produto/Placa": "4000.01993.0", "Ano": "2023", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "2", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "BOMBA L200-4 UAP ", "Código Do Produto/Placa": "4000.02161.0", "Ano": "2024", "CENTRO DE CUSTO": "TRES LAGOAS", "Gestor": "NILTON GARCIA"},
-        {"Item": "3", "Itens": "CARRETA", "Equipamentos/Veiculos ": "MERCEDES BENZ ACTROS 2546LS", "Código Do Produto/Placa": "FPW8G23", "Ano": "2019", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "4", "Itens": "MUNCK", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "RKI6D06", "Ano": "2022", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
-        {"Item": "5", "Itens": "CAMINHÃO", "Equipamentos/Veiculos ": "VW/17.250 CNC", "Código Do Produto/Placa": "NVJ8H98", "Ano": "2011", "CENTRO DE CUSTO": "CARMOPOLIS", "Gestor": ""},
-        {"Item": "6", "Itens": "VACUO", "Equipamentos/Veiculos ": "VW/26.260 CRM 6X2", "Código Do Produto/Placa": "QMJ8C91", "Ano": "2025", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
-        {"Item": "7", "Itens": "MUNCK", "Equipamentos/Veiculos ": "VOLKSWAGEN 26320.0 6X", "Código Do Produto/Placa": "RRE7I66", "Ano": "2024", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"},
-        {"Item": "8", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "CESTO METALICO PARA 2 PESSOAS", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
-        {"Item": "9", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "COMPRESSOR DISMANN", "Código Do Produto/Placa": "", "Ano": "2023", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": ""},
-        {"Item": "10", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA A COMBUSTAO", "Código Do Produto/Placa": "H50XT.HY", "Ano": "2023", "CENTRO DE CUSTO": "DIAS D AVILA", "Gestor": ""},
-        {"Item": "11", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "EMPILHADEIRA COMBUSTAO YALE ", "Código Do Produto/Placa": "GP050MX_A2.YA", "Ano": "2023", "CENTRO DE CUSTO": "MARIO LAGO", "Gestor": "JULIANO"},
-        {"Item": "12", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-125P", "Código Do Produto/Placa": "SC121PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "13", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-180F", "Código Do Produto/Placa": "SC181PCAE80", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "14", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GRUPO GERADOR GMH-60P SL", "Código Do Produto/Placa": "SC590PPAE80", "Ano": "2025", "CENTRO DE CUSTO": "SÃO SEBASTIÃO", "Gestor": "MARCELO"},
-        {"Item": "15", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "GERADOR QAS 55 Pd 220V QC2103", "Código Do Produto/Placa": "8970018530", "Ano": "2024", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "16", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "HIDROJATO CINOJET MOD 500/18", "Código Do Produto/Placa": "1743", "Ano": "2023", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "17", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "18", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA KARSHER A.P. HDS 12/15-4 ", "Código Do Produto/Placa": "10309290", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "19", "Itens": "MUNCK", "Equipamentos/Veiculos ": "MERCEDES-BENZ ATEGO", "Código Do Produto/Placa": "SKP9H95", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "20", "Itens": "MUNCK", "Equipamentos/Veiculos ": "M.BENZ/ATEGO 2433CE", "Código Do Produto/Placa": "SKP0C57", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "21", "Itens": "ÔNIBUS", "Equipamentos/Veiculos ": "M.BENZ/ INDUSCAR APACHE U ", "Código Do Produto/Placa": "RIO3G87", "Ano": "2019", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "22", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "ROCADEIRA RHA JD 5000", "Código Do Produto/Placa": "VEIC_022349", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "23", "Itens": "TRATOR", "Equipamentos/Veiculos ": "TRATOR JOHN DEERE 5080E", "Código Do Produto/Placa": "VEIC_A04890", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "24", "Itens": "VACUO", "Equipamentos/Veiculos ": "IVECO/ TECTOR", "Código Do Produto/Placa": "TTF6C50", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "25", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP6B48", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "26", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8D07", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "27", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8E19", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "28", "Itens": "VAN", "Equipamentos/Veiculos ": "RENAULT MASTER", "Código Do Produto/Placa": "SKP8J29", "Ano": "2025", "CENTRO DE CUSTO": "TANQUES SUAPE", "Gestor": "IVO"},
-        {"Item": "29", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17967", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "30", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "31", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "32", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17996", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "33", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Gasolina 65cc Multifuncional Profissional", "Código Do Produto/Placa": "17967", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "34", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA) - NR 151", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "35", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA) - NR 042", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "REDUC", "Gestor": "CARLOS JESUS"},
-        {"Item": "36", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRESSAO KARCHER HDS 10/18 (SEMI NOVA)", "Código Do Produto/Placa": "2574", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "37", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Soprador De Folhas Profissional A Gasolina 25,4cc 2 Tempos", "Código Do Produto/Placa": "296527", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "38", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Soprador De Folhas Profissional A Gasolina 25,4cc 2 Tempos", "Código Do Produto/Placa": "296528", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "39", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motoserra Elétrica 12 Polegadas Portátil C/2 Baterias 48v", "Código Do Produto/Placa": "32255", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "40", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motoserra Elétrica 12 Polegadas Portátil C/2 Baterias 48v", "Código Do Produto/Placa": "32255", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "41", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Stihl Fs 55", "Código Do Produto/Placa": "1312", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "42", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Rocadeira Stihl Fs 55", "Código Do Produto/Placa": "1311", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "43", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6387", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "44", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6388", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "45", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6181", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "46", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Roçadeira FS 161-L TRIMCUT C 42-2", "Código Do Produto/Placa": "6182", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "47", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "LAVADORA DE ALTA PRES. HD 10/18 TRIF. 220V ", "Código Do Produto/Placa": "", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"},
-        {"Item": "48", "Itens": "EQUIPAMENTO", "Equipamentos/Veiculos ": "Motosserra Gasolina Stihl 35,8cc Ms 182 1,6 Kw Profissional Cor Laranja", "Código Do Produto/Placa": "9186", "Ano": "2025", "CENTRO DE CUSTO": "GASLUB", "Gestor": "CLEBER"}
-    ];
+    // =======================================================================
+    // COLOQUE O SEU LINK DO GOOGLE SHEETS (CSV) DENTRO DAS ASPAS ABAIXO:
+    // =======================================================================
+    const LINK_DO_GOOGLE_SHEETS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZOAmOH7kmO5d1GTLT5O1hscO1G_1lYrNUro618n3lWWJd0gFba2PYAsltmpW9YPJeAtrA14NMl5be/pub?gid=1196360941&single=true&output=csv';
 
-    // Mapeamento das chaves de dados para o nome da coluna no cabeçalho
+    let dadosOriginais = [];
+    let dadosFiltrados = [];
+
+    // Normalização das colunas para não dar erro se o cabeçalho tiver espaços ou acentos
     const COLUNA_HEADERS = [
-        { key: "Itens", label: "Categoria" },
-        { key: "Equipamentos/Veiculos ", label: "Equipamento/Veículo" },
-        { key: "Código Do Produto/Placa", label: "Cód. Produto/Placa" },
-        { key: "Ano", label: "Ano" },
-        { key: "CENTRO DE CUSTO", label: "Centro de Custo" },
-        { key: "Gestor", label: "Gestor" }
+      { key: "itens", label: "Categoria" },
+      { key: "equipamentos_veiculos", label: "Equipamento/Veículo" },
+      { key: "codigo_do_produto_placa", label: "Cód. Produto/Placa" },
+      { key: "ano", label: "Ano" },
+      { key: "centro_de_custo", label: "Centro de Custo" },
+      { key: "gestor", label: "Gestor" }
     ];
 
-    let dadosOriginais = DADOS_ORIGINAIS_FIXOS; 
-    let dadosFiltrados = [...dadosOriginais];
-    
-    // Variável global
-    const filtroResumo = document.getElementById('filtroResumo');
-    
+    window.addEventListener('DOMContentLoaded', () => {
+      // Puxando os dados da planilha do Google
+      Papa.parse(LINK_DO_GOOGLE_SHEETS, {
+        download: true,
+        header: true,
+        skipEmptyLines: 'greedy',
+        // Limpa os nomes das colunas da planilha (tira acentos, espaços viram underline)
+        transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').trim(),
+        complete: function(results) {
+          
+          dadosOriginais = results.data.filter(linha => {
+            const valores = Object.values(linha).join('').trim();
+            return valores !== ""; // Ignora linhas totalmente vazias
+          });
+
+          dadosFiltrados = [...dadosOriginais];
+          document.getElementById('status-arquivo').textContent = "Conectado ao Google Sheets!";
+          document.getElementById('filtroResumo').textContent = 'Nenhum filtro aplicado (mostrando todos os registros).';
+          
+          preencherFiltros(dadosOriginais);
+          processarDados(dadosFiltrados);
+        },
+        error: function(err) {
+          document.getElementById('status-arquivo').textContent = "Erro na conexão.";
+          document.getElementById('filtroResumo').textContent = "Verifique o link do CSV no código fonte.";
+          console.error(err);
+        }
+      });
+    });
+
     document.getElementById('btnAplicar').addEventListener('click', aplicarFiltros);
     document.getElementById('btnLimpar').addEventListener('click', limparFiltros);
 
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!Array.isArray(dadosOriginais) || dadosOriginais.length === 0) {
-        filtroResumo.textContent = 'Nenhum dado encontrado.';
-        return;
-      }
-      preencherFiltros(dadosOriginais);
-      processarDados(dadosFiltrados);
-      filtroResumo.textContent = 'Nenhum filtro aplicado (mostrando todos os registros).';
-    });
-
-    // --- FUNÇÕES DE FILTROS DE SELEÇÃO (DROPDOWNS) ---
-
+    // --- FUNÇÕES DE FILTROS ---
     function preencherFiltros(dados) {
-      const itensSet = new Set();
-      const centrosSet = new Set();
-      const codigosSet = new Set();
-      const anosSet = new Set();
-      const gestoresSet = new Set();
+      const setup = (id, campo) => {
+        const s = document.getElementById(id);
+        s.innerHTML = '<option value="">(Todos)</option>';
+        const unicos = [...new Set(dados.map(x => x[campo]).filter(v => v))].sort();
+        unicos.forEach(v => s.innerHTML += `<option value="${v}">${v}</option>`);
+      };
 
-      dados.forEach(l => {
-        if (l.Itens) itensSet.add(l.Itens);
-        if (l['CENTRO DE CUSTO']) centrosSet.add(l['CENTRO DE CUSTO']);
-        if (l['Código Do Produto/Placa']) codigosSet.add(l['Código Do Produto/Placa']); 
-        if (l.Ano) anosSet.add(l.Ano);
-        if (l.Gestor) gestoresSet.add(l.Gestor);
-      });
+      setup('filtroItens', 'itens');
+      setup('filtroCentro', 'centro_de_custo');
+      setup('filtroCodProduto', 'codigo_do_produto_placa');
+      setup('filtroGestor', 'gestor');
 
-      preencherSelect('filtroItens', itensSet);
-      preencherSelect('filtroCentro', centrosSet);
-      preencherSelect('filtroCodProduto', codigosSet);
-      preencherSelect('filtroGestor', gestoresSet);
-      
-      // Ordena por ano
-      preencherSelect('filtroAno', Array.from(anosSet).sort((a, b) => {
-          return b.toString().localeCompare(a.toString()); // Decrescente
-      }));
-    }
-
-    function preencherSelect(id, setValores) {
-      const select = document.getElementById(id);
-      const valorAtual = select.value;
-      select.innerHTML = '<option value="">(Todos)</option>';
-      
-      const valores = Array.isArray(setValores) ? setValores : Array.from(setValores);
-
-      valores
-        .filter(v => v) // Remove valores vazios/nulos antes de ordenar
-        .sort((a, b) => a.toString().localeCompare(b.toString(), 'pt-BR'))
-        .forEach(valor => {
-          const option = document.createElement('option');
-          option.value = valor;
-          option.textContent = valor;
-          select.appendChild(option);
-        });
-
-      if (valorAtual) select.value = valorAtual;
+      // Ordena ano decrescente
+      const anos = [...new Set(dados.map(x => x.ano).filter(v => v))].sort((a,b) => b.localeCompare(a));
+      const sAno = document.getElementById('filtroAno');
+      sAno.innerHTML = '<option value="">(Todos)</option>';
+      anos.forEach(v => sAno.innerHTML += `<option value="${v}">${v}</option>`);
     }
 
     function aplicarFiltros() {
-      const itensSel = document.getElementById('filtroItens').value;
-      const centroSel = document.getElementById('filtroCentro').value;
-      const codProdutoSel = document.getElementById('filtroCodProduto').value;
-      const anoSel = document.getElementById('filtroAno').value;
-      const gestorSel = document.getElementById('filtroGestor').value;
+      const fItens = document.getElementById('filtroItens').value;
+      const fCentro = document.getElementById('filtroCentro').value;
+      const fCodProduto = document.getElementById('filtroCodProduto').value;
+      const fAno = document.getElementById('filtroAno').value;
+      const fGestor = document.getElementById('filtroGestor').value;
 
-      // 1. Aplica o filtro de seleção (dropdown) aos dados originais
       dadosFiltrados = dadosOriginais.filter(l => {
-        const gestorDado = l.Gestor || ''; 
-        
-        const passaItens = !itensSel || l.Itens === itensSel;
-        const passaCentro = !centroSel || l['CENTRO DE CUSTO'] === centroSel;
-        const passaCodProduto = !codProdutoSel || l['Código Do Produto/Placa'] === codProdutoSel;
-        const passaAno = !anoSel || l.Ano === anoSel;
-        // Filtra gestor tratando strings vazias ou nulas
-        const passaGestor = !gestorSel || (gestorDado === gestorSel); 
-        
-        return passaItens && passaCentro && passaCodProduto && passaAno && passaGestor;
+        return (!fItens || l.itens === fItens) &&
+               (!fCentro || l.centro_de_custo === fCentro) &&
+               (!fCodProduto || l.codigo_do_produto_placa === fCodProduto) &&
+               (!fAno || l.ano === fAno) &&
+               (!fGestor || (l.gestor || '') === fGestor);
       });
 
-      // 2. Processa os dados filtrados
-      processarDados(dadosFiltrados); 
+      processarDados(dadosFiltrados);
+      
+      const resumo = [];
+      if(fItens) resumo.push(fItens);
+      if(fCentro) resumo.push(fCentro);
+      if(fCodProduto) resumo.push(fCodProduto);
+      if(fAno) resumo.push(fAno);
+      if(fGestor) resumo.push(fGestor);
 
-      // 3. Atualiza o resumo dos filtros
-      atualizarResumoFiltros(itensSel, centroSel, codProdutoSel, anoSel, gestorSel);
+      document.getElementById('filtroResumo').innerHTML = resumo.length ? 
+        'Filtros ativos → <span>' + resumo.join(' | ') + '</span>' : 
+        'Nenhum filtro aplicado (mostrando todos os registros).';
     }
 
     function limparFiltros() {
-      document.getElementById('filtroItens').value = '';
-      document.getElementById('filtroCentro').value = '';
-      document.getElementById('filtroCodProduto').value = '';
-      document.getElementById('filtroAno').value = '';
-      document.getElementById('filtroGestor').value = '';
-      
-      // Aplica o filtro (voltando para a lista completa)
+      document.querySelectorAll('select').forEach(s => s.value = '');
       aplicarFiltros();
     }
 
-    function atualizarResumoFiltros(itensSel, centroSel, codProdutoSel, anoSel, gestorSel) {
-      const partes = [];
-      if (itensSel) partes.push(`Categoria: <span>${itensSel}</span>`);
-      if (centroSel) partes.push(`Centro de Custo: <span>${centroSel}</span>`);
-      if (codProdutoSel) partes.push(`Cód. Produto/Placa: <span>${codProdutoSel}</span>`);
-      if (anoSel) partes.push(`Ano: <span>${anoSel}</span>`);
-      if (gestorSel) partes.push(`Gestor: <span>${gestorSel}</span>`);
-
-      if (!partes.length) {
-        filtroResumo.innerHTML = 'Nenhum filtro aplicado (mostrando todos os registros).';
-      } else {
-        filtroResumo.innerHTML = 'Filtros ativos → ' + partes.join(' | ');
-      }
-    }
-
-
     // --- FUNÇÕES DE RENDERIZAÇÃO ---
-
     function processarDados(dados) {
-      if (!Array.isArray(dados) || dados.length === 0) {
-        atualizarResumo([]);
+      if (dados.length === 0) {
+        document.getElementById('totalVeiculos').textContent = '0';
+        document.getElementById('anoMaisRecente').textContent = '-';
+        document.getElementById('tiposItensUnicos').textContent = '0';
+        document.getElementById('totalGestores').textContent = '0';
         renderMainTable([]);
         return;
       }
-      atualizarResumo(dados);
+
+      document.getElementById('totalVeiculos').textContent = dados.length;
+      const anos = dados.map(item => parseInt(item.ano)).filter(year => !isNaN(year));
+      document.getElementById('anoMaisRecente').textContent = anos.length > 0 ? Math.max(...anos) : '-';
+      document.getElementById('tiposItensUnicos').textContent = new Set(dados.map(d => d.itens).filter(t => t)).size;
+      document.getElementById('totalGestores').textContent = new Set(dados.map(d => d.gestor).filter(g => g && g.trim() !== '')).size;
+
       renderMainTable(dados);
     }
 
-    function atualizarResumo(dados) {
-      const totalItens = dados.length;
-      
-      const anos = dados.map(item => parseInt(item.Ano)).filter(year => !isNaN(year));
-      const anoMaisRecente = anos.length > 0 ? Math.max(...anos) : '-';
-      
-      const tiposUnicos = new Set(dados.map(d => d.Itens).filter(t => t));
-      const totalTipos = tiposUnicos.size;
-      
-      // Contabiliza gestores únicos, ignorando strings vazias ou nulas
-      const gestoresUnicos = new Set(dados.map(d => d.Gestor).filter(g => g && g !== ''));
-      const totalGestores = gestoresUnicos.size;
-
-      document.getElementById('totalVeiculos').textContent = totalItens.toLocaleString('pt-BR');
-      document.getElementById('anoMaisRecente').textContent = anoMaisRecente;
-      document.getElementById('tiposItensUnicos').textContent = totalTipos.toLocaleString('pt-BR');
-      document.getElementById('totalGestores').textContent = totalGestores.toLocaleString('pt-BR');
-    }
-    
-    /**
-     * Gera o cabeçalho e o corpo da tabela principal (sem linha de filtros de busca).
-     */
     function renderMainTable(dados) {
-        const table = document.getElementById('mainDataTable');
-        
-        const existingHeader = table.querySelector('thead');
-        
-        // Se o cabeçalho já existe, apenas atualiza o corpo
-        if (existingHeader) {
-            const dataBody = document.getElementById('dataBody');
-            renderTableBody(dados, dataBody);
-            return;
-        }
-
-        let theadHtml = '<thead>';
-        
-        // 1. Linha de Títulos (Nomes das Colunas)
-        theadHtml += '<tr class="header-row">';
-        COLUNA_HEADERS.forEach(col => {
-            theadHtml += `<th>${col.label}</th>`;
-        });
-        theadHtml += '</tr>';
-        
-        theadHtml += '</thead>';
+      const table = document.getElementById('mainDataTable');
+      
+      // Montar Cabeçalho se não existir
+      if (!table.querySelector('thead')) {
+        let theadHtml = '<thead><tr>';
+        COLUNA_HEADERS.forEach(col => theadHtml += `<th>${col.label}</th>`);
+        theadHtml += '</tr></thead><tbody id="dataBody"></tbody>';
         table.innerHTML = theadHtml;
+      }
 
-        // Cria e anexa o corpo da tabela
-        const tbodyElement = document.createElement('tbody');
-        tbodyElement.id = 'dataBody';
-        table.appendChild(tbodyElement);
-        
-        // Renderiza o corpo
-        renderTableBody(dados, tbodyElement);
-    }
-    
-    /**
-     * Renderiza o corpo da tabela principal.
-     */
-    function renderTableBody(dados, dataBody) {
-      dataBody.innerHTML = ''; 
-
-      // O número de colunas é determinado pelo COLUNA_HEADERS
-      const numColunas = COLUNA_HEADERS.length;
+      const tbody = document.getElementById('dataBody');
+      tbody.innerHTML = '';
 
       if (dados.length === 0) {
-        const row = dataBody.insertRow();
-        const cell = row.insertCell();
-        cell.colSpan = numColunas;
-        cell.textContent = 'Nenhum registro encontrado com os filtros aplicados.';
-        cell.style.textAlign = 'center';
-        cell.style.padding = '20px';
+        tbody.innerHTML = `<tr><td colspan="${COLUNA_HEADERS.length}" style="text-align:center; padding:20px;">Nenhum registro encontrado com os filtros aplicados.</td></tr>`;
         return;
       }
 
       dados.forEach(l => {
-        const row = dataBody.insertRow();
+        const tr = document.createElement('tr');
         COLUNA_HEADERS.forEach(col => {
-            // Acessa o valor do dado usando a chave (key) definida em COLUNA_HEADERS
-            const valor = l[col.key];
-            row.insertCell().textContent = valor !== undefined && valor !== null && valor !== '' ? valor : '-';
+          const td = document.createElement('td');
+          const valor = l[col.key];
+          td.textContent = (valor !== undefined && valor !== null && valor.trim() !== '') ? valor : '-';
+          tr.appendChild(td);
         });
+        tbody.appendChild(tr);
       });
     }
-
   </script>
 </body>
 </html>
