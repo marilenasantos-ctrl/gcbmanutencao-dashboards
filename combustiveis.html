@@ -7,7 +7,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    /* CSS ORIGINAL RESTAURADO */
     * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
     body { margin: 0; padding: 0; background: #f3f4f6; color: #111827; }
     header { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; padding-left: 110px !important; position: relative; }
@@ -42,9 +41,15 @@
     .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; margin-top: 10px; align-items: end; }
     .filter-group label { font-size: 11px; color: #4b5563; display: block; margin-bottom: 3px; }
     .filter-group select, .filter-group input { width: 100%; padding: 7px 9px; border-radius: 999px; border: 1px solid #d1d5db; font-size: 12px; background: #f9fafb; outline: none; }
-    .btn { border: none; border-radius: 999px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 600; }
+    
+    .btn { border: none; border-radius: 999px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-weight: 600; transition: 0.2s;}
     .btn-primary { background: #22c55e; color: #ffffff; }
+    .btn-primary:hover { background: #16a34a; }
     .btn-secondary { background: #e5e7eb; color: #374151; }
+    .btn-secondary:hover { background: #d1d5db; }
+    .btn-export { background: #0284c7; color: #ffffff; }
+    .btn-export:hover { background: #0369a1; }
+    
     .filter-badge { margin-top: 8px; font-size: 11px; color: #6b7280; }
     .filter-badge span { font-weight: 600; color: #065f46; }
 
@@ -91,7 +96,16 @@
         <div class="filter-group"><label>Placa</label><select id="filtroPlaca"><option value="">(Todas)</option></select></div>
         <div class="filter-group"><label>Posto</label><select id="filtroPosto"><option value="">(Todos)</option></select></div>
         <div class="filter-group"><label>Período</label><div style="display:flex; gap:6px;"><input type="date" id="filtroDataIni"><input type="date" id="filtroDataFim"></div></div>
-        <div class="filter-group"><div style="display:flex; gap:10px;"><button class="btn btn-primary" onclick="aplicarFiltros()">Aplicar</button><button class="btn btn-secondary" onclick="limparFiltros()">Limpar</button></div></div>
+        
+        <div class="filter-group">
+          <label>Ações</label>
+          <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="aplicarFiltros()">Aplicar</button>
+            <button class="btn btn-secondary" onclick="limparFiltros()">Limpar</button>
+            <button class="btn btn-export" onclick="exportarRelatorio()">📥 Exportar</button>
+          </div>
+        </div>
+        
       </div>
       <div class="filter-badge" id="filtroResumo">Carregando dados...</div>
     </div>
@@ -126,7 +140,6 @@
         download: true, header: true, skipEmptyLines: true,
         complete: function(results) {
           
-          // --- CORREÇÃO APLICADA AQUI: Filtrando a linha de Total ---
           dadosOriginais = results.data.filter(linha => {
              const dataPreenchida = linha['Data de Abastecimento'] && linha['Data de Abastecimento'].trim() !== '';
              const posto = (linha['Nome do Posto'] || '').toUpperCase();
@@ -135,7 +148,6 @@
              
              return dataPreenchida && naoETotal;
           });
-          // ----------------------------------------------------------
 
           dadosFiltrados = [...dadosOriginais];
           preencherSelects(dadosOriginais);
@@ -144,24 +156,18 @@
       });
     });
 
-    // FUNÇÃO ATUALIZADA PARA TRATAR NÚMEROS
     function limparNum(v) {
       if(!v) return 0;
-      let str = v.toString().replace(/[R$\s]/g, ''); // Remove R$ e espaços
-      
-      // Se tem vírgula e ponto juntos, precisamos descobrir quem é o decimal
+      let str = v.toString().replace(/[R$\s]/g, '');
       if (str.includes(',') && str.includes('.')) {
           if (str.indexOf('.') > str.indexOf(',')) {
-              str = str.replace(/,/g, ''); // Padrão US (1,234.56)
+              str = str.replace(/,/g, '');
           } else {
-              str = str.replace(/\./g, '').replace(',', '.'); // Padrão BR (1.234,56)
+              str = str.replace(/\./g, '').replace(',', '.');
           }
-      } 
-      // Se tem só vírgula (ex: 1234,56)
-      else if (str.includes(',')) {
+      } else if (str.includes(',')) {
           str = str.replace(',', '.');
       }
-      
       return parseFloat(str) || 0;
     }
 
@@ -218,7 +224,6 @@
         const litros = limparNum(l['Litros']), valor = limparNum(l['Valor Total']);
         tL += litros; tV += valor;
 
-        // Agrupamentos para gráficos
         counts.placas[l.Placa] = (counts.placas[l.Placa] || 0) + litros;
         counts.postos[l['Nome do Posto']] = (counts.postos[l['Nome do Posto']] || 0) + valor;
         counts.centros[l['Centro de Custo']] = (counts.centros[l['Centro de Custo']] || 0) + valor;
@@ -229,7 +234,7 @@
         }
 
         if(idx < 200) {
-          tbody.innerHTML += `<tr><td>${l['Nome do Posto']}</td><td>${l['Centro de Custo']}</td><td>${l['Data de Abastecimento']}</td><td>${l['Hora Abastecimento'] || ''}</td><td>${l.Placa}</td><td>${l.Produto}</td><td>${litros.toLocaleString()}</td><td>${l['Valor Litro']}</td><td>R$ ${valor.toFixed(2)}</td></tr>`;
+          tbody.innerHTML += `<tr><td>${l['Nome do Posto']}</td><td>${l['Centro de Custo']}</td><td>${l['Data de Abastecimento']}</td><td>${l['Hora Abastecimento'] || ''}</td><td>${l.Placa}</td><td>${l.Produto}</td><td>${litros.toLocaleString('pt-BR')}</td><td>${l['Valor Litro']}</td><td>R$ ${valor.toFixed(2)}</td></tr>`;
         }
       });
 
@@ -237,7 +242,7 @@
       document.getElementById('valorTotal').textContent = tV.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
       document.getElementById('precoMedio').textContent = (tV/tL || 0).toLocaleString('pt-BR', {minimumFractionDigits: 3});
       document.getElementById('qtdAbastecimentos').textContent = dadosFiltrados.length;
-      document.getElementById('filtroResumo').textContent = `Mostrando ${dadosFiltrados.length} registros.`;
+      document.getElementById('filtroResumo').textContent = `Mostrando ${dadosFiltrados.length} registros. (Tabela limitada aos 200 primeiros para desempenho)`;
 
       renderCharts(counts);
     }
@@ -258,6 +263,38 @@
       config('chartPlacas', 'bar', tP.map(x=>x[0]), tP.map(x=>x[1]), 'Litros', 'y');
       config('chartPostos', 'bar', tPosto.map(x=>x[0]), tPosto.map(x=>x[1]), 'Valor Total R$');
       config('chartCentro', 'bar', tC.map(x=>x[0]), tC.map(x=>x[1]), 'Valor Total R$', 'y');
+    }
+
+    // --- NOVA FUNÇÃO PARA EXPORTAR RELATÓRIO (CSV / EXCEL) ---
+    function exportarRelatorio() {
+      if (dadosFiltrados.length === 0) {
+        alert("Não há dados para exportar no momento.");
+        return;
+      }
+
+      // Usa o PapaParse para reverter os dados visíveis em formato CSV
+      // O delimitador ';' é usado pois o Excel brasileiro entende colunas separadas por ponto-e-vírgula.
+      const csv = Papa.unparse(dadosFiltrados, {
+        delimiter: ";"
+      });
+
+      // Adiciona o caractere BOM (\uFEFF) para forçar o Excel a ler os acentos (UTF-8) corretamente
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+      
+      // Cria um link temporário para forçar o download do arquivo
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      
+      // Pega a data atual para dar um nome único ao arquivo
+      const dataHoje = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+      
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Relatorio_Combustivel_${dataHoje}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
 </body>
