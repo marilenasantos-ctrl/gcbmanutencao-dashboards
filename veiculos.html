@@ -68,12 +68,16 @@
     <div class="filters-grid">
       <div class="filter-group"><label>Tipo</label><select id="filtroTipo"></select></div>
       <div class="filter-group"><label>Centro de Custo</label><select id="filtroCentro"></select></div>
-      <div class="filter-group"><label>Placa</label><select id="filtroPlaca"></select></div>
       <div class="filter-group"><label>Ano</label><select id="filtroAno"></select></div>
       
       <div class="filter-group">
-        <label>Escrever Locadora</label>
-        <input type="text" id="filtroLocadora" placeholder="Digite o nome...">
+        <label>Buscar Placa</label>
+        <input type="text" id="filtroPlaca" placeholder="Digite a placa...">
+      </div>
+
+      <div class="filter-group">
+        <label>Buscar Locadora</label>
+        <input type="text" id="filtroLocadora" placeholder="Ex: Localiza...">
       </div>
 
       <div class="filter-group" style="display:flex; gap:8px;">
@@ -96,6 +100,7 @@
           <th>Gestor</th>
           <th>Usuário</th>
           <th>Locadora</th>
+          <th>Renavam</th> 
         </tr>
       </thead>
       <tbody id="dataBody"></tbody>
@@ -108,17 +113,15 @@ let dadosOriginais = [];
 let dadosFiltrados = [];
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Anti-cache para sempre puxar o arquivo novo do GitHub
   const urlCSV = 'Relacao_Veiculos.csv?v=' + Date.now();
 
   Papa.parse(urlCSV, {
     download: true,
     header: true,
-    delimiter: ";", // Força o uso do ponto e vírgula conforme seu print
+    delimiter: ";", 
     skipEmptyLines: 'greedy',
     transformHeader: h => h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_').trim(),
     complete: function(results) {
-      // Mantém todas as linhas que possuem conteúdo (remove apenas linhas vazias)
       dadosOriginais = results.data.filter(linha => {
         const valores = Object.values(linha).join('').trim();
         return valores !== ""; 
@@ -141,26 +144,42 @@ function preencherFiltros(d) {
   const setup = (id, campo) => {
     const s = document.getElementById(id);
     s.innerHTML = '<option value="">(Todos)</option>';
-    const unicos = [...new Set(d.map(x => x[campo]).filter(v => v))].sort();
+    
+    // MELHORIA AQUI: Remove espaços extras antes e depois da palavra e deixa tudo maiúsculo. 
+    // Assim, "PARADA REDUC " e "PARADA REDUC" viram exatamente a mesma coisa, acabando com a duplicação!
+    const valoresLimpos = d.map(x => (x[campo] || '').toString().trim().toUpperCase()).filter(v => v);
+    const unicos = [...new Set(valoresLimpos)].sort();
+    
     unicos.forEach(v => s.innerHTML += `<option value="${v}">${v}</option>`);
   };
+
   setup('filtroTipo', 'tipo');
   setup('filtroCentro', 'centro_de_custo');
-  setup('filtroPlaca', 'placa');
   setup('filtroAno', 'ano');
+  // O "filtroPlaca" foi removido daqui pois agora é um campo de texto livre!
 }
 
 function aplicarFiltros() {
-  const f = id => document.getElementById(id).value;
+  const fTipo = document.getElementById('filtroTipo').value;
+  const fCentro = document.getElementById('filtroCentro').value;
+  const fAno = document.getElementById('filtroAno').value;
+  
+  // Pegando os valores digitados nos campos de texto
+  const fPlaca = document.getElementById('filtroPlaca').value.toLowerCase().trim();
   const fLocadora = document.getElementById('filtroLocadora').value.toLowerCase().trim();
   
-  dadosFiltrados = dadosOriginais.filter(d => 
-    (!f('filtroTipo') || d.tipo === f('filtroTipo')) &&
-    (!f('filtroCentro') || d.centro_de_custo === f('filtroCentro')) &&
-    (!f('filtroPlaca') || d.placa === f('filtroPlaca')) &&
-    (!f('filtroAno') || d.ano === f('filtroAno')) &&
-    (!fLocadora || (d.locadora && d.locadora.toLowerCase().includes(fLocadora)))
-  );
+  dadosFiltrados = dadosOriginais.filter(d => {
+    // Limpamos os dados da planilha na hora de comparar para evitar erro com espaços invisíveis
+    const dTipo = (d.tipo || '').toString().trim().toUpperCase();
+    const dCentro = (d.centro_de_custo || '').toString().trim().toUpperCase();
+    const dAno = (d.ano || '').toString().trim().toUpperCase();
+
+    return (!fTipo || dTipo === fTipo) &&
+           (!fCentro || dCentro === fCentro) &&
+           (!fAno || dAno === fAno) &&
+           (!fPlaca || (d.placa && d.placa.toLowerCase().includes(fPlaca))) &&
+           (!fLocadora || (d.locadora && d.locadora.toLowerCase().includes(fLocadora)));
+  });
   
   processar(dadosFiltrados);
 }
@@ -195,6 +214,7 @@ function processar(d) {
         <td>${x.gestor || '-'}</td>
         <td>${x.usuario || '-'}</td>
         <td>${x.locadora || '-'}</td>
+        <td>${x.renavam || '-'}</td>
       </tr>`;
   });
 }
